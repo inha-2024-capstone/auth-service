@@ -4,7 +4,6 @@ package com.mog.authserver.jwt.service;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.util.JwtUtil;
 import com.mog.authserver.jwt.util.TokenExpireTime;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
     private final JwtUtil jwtUtil;
     private final TokenExpireTime tokenExpireTime;
+
     public JwtToken reGenerateTokenSet(String refreshToken){
         if(!jwtUtil.isTokenValid(refreshToken)){
             throw new RuntimeException("유효하지 않은 토큰");
