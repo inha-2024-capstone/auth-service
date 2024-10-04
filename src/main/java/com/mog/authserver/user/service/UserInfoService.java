@@ -24,8 +24,8 @@ public class UserInfoService {
     public UserInfoEntity signUp(UserInfoRequestDTO userInfoRequestDTO){
         UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfo(userInfoRequestDTO);
         Boolean doesUserExist = userInfoRepository.existsByEmailAndLoginSource(userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
-        if(!doesUserExist){
-            throw new UserAlreadyExistException();
+        if(doesUserExist){
+            throw new UserAlreadyExistException(userInfoEntity.getEmail());
         }
         else {
             userInfoEntity.setPassword(passwordEncoder.encode(userInfoEntity.getPassword()));
