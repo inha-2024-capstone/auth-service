@@ -57,7 +57,6 @@ class JwtUtilTest {
         Assertions.assertThat(principal.id()).isEqualTo(1L);
         Assertions.assertThat(principal.nickName()).isEqualTo("kim");
         Assertions.assertThat(principal.authorities().isEmpty()).isEqualTo(false);
-
     }
 
 

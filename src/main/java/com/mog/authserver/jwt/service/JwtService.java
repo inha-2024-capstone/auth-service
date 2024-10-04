@@ -3,6 +3,7 @@ package com.mog.authserver.jwt.service;
 
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.util.JwtUtil;
+import com.mog.authserver.jwt.util.TokenExpireTime;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -12,28 +13,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
     private final JwtUtil jwtUtil;
-    private final Integer accessTokenTime = 5;
-    private final Integer refreshTokenTime = 30;
+    private final TokenExpireTime tokenExpireTime;
     public JwtToken reGenerateTokenSet(String refreshToken){
         if(!jwtUtil.isTokenValid(refreshToken)){
             throw new RuntimeException("유효하지 않은 토큰");
         }
         Authentication authentication = jwtUtil.getAuthentication(refreshToken);
         return new JwtToken(
-                jwtUtil.generateToken(authentication, accessTokenTime),
-                jwtUtil.generateToken(authentication, refreshTokenTime)
+                jwtUtil.generateToken(authentication, tokenExpireTime.getAccessTokenExpireTime()),
+                jwtUtil.generateToken(authentication, tokenExpireTime.getRefreshTokenExpireTime())
         );
     }
 
     public JwtToken generateTokenSet(Authentication authentication){
         return new JwtToken(
-                jwtUtil.generateToken(authentication, accessTokenTime),
-                jwtUtil.generateToken(authentication, refreshTokenTime)
+                jwtUtil.generateToken(authentication, tokenExpireTime.getAccessTokenExpireTime()),
+                jwtUtil.generateToken(authentication, tokenExpireTime.getRefreshTokenExpireTime())
         );
     }
 
-    public Authentication getAuthentication(HttpServletRequest request){
-        String token = resolveAccessToken(request);
+    public Authentication getAuthentication(String token){
         if(token == null){
             throw new RuntimeException("Authorization is not present in the header");
         }
@@ -43,14 +42,6 @@ public class JwtService {
             }
             return jwtUtil.getAuthentication(token);
         }
-    }
-
-    public String resolveAccessToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 
 }
