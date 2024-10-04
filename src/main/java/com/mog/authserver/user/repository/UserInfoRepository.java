@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfoEntity, Long> {
-    @Transactional
+    @Transactional(readOnly = true)
     Optional<UserInfoEntity> findByEmailAndLoginSource(String email, LoginSource loginSource);
 
 }

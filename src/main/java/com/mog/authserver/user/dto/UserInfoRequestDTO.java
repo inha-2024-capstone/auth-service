@@ -9,10 +9,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record UserInfoRequestDTO(
-        @NotBlank
         @NotBlank(message = "이메일을 입력해야 합니다.")
         String email,
-        @NotBlank
         @NotBlank(message = "사용자 이름을 입력해야 합니다.")
         String username,
         @Size(min=10, max=15)
