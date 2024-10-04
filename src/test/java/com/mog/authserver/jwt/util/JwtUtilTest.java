@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class JwtUtilTest {
 
     @Autowired
-    private JwtUtil jwtUtill;
+    private JwtUtil jwtUtil;
 
     @Test
     void JWT_생성_및_확인(){
@@ -31,8 +31,8 @@ class JwtUtilTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
 
         // When
-        String jwtToken = jwtUtill.generateToken(authentication, 5);
-        boolean tokenValid = jwtUtill.isTokenValid(jwtToken);
+        String jwtToken = jwtUtil.generateToken(authentication, 5);
+        boolean tokenValid = jwtUtil.isTokenValid(jwtToken);
 
         // Then
         Assertions.assertThat(tokenValid).isEqualTo(true);
@@ -47,9 +47,9 @@ class JwtUtilTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
 
         // Given
-        String jwtToken = jwtUtill.generateToken(authentication, 5);
-        boolean tokenValid = jwtUtill.isTokenValid(jwtToken);
-        Authentication jwtUtillAuthentication = jwtUtill.getAuthentication(jwtToken);
+        String jwtToken = jwtUtil.generateToken(authentication, 5);
+        boolean tokenValid = jwtUtil.isTokenValid(jwtToken);
+        Authentication jwtUtillAuthentication = jwtUtil.getAuthentication(jwtToken);
 
         AuthenticatedUserInfo principal = (AuthenticatedUserInfo)jwtUtillAuthentication.getPrincipal();
         // Then
