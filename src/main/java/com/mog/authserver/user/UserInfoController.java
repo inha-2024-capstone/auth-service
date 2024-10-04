@@ -42,13 +42,13 @@ public class UserInfoController {
 
     @GetMapping("/refresh")
     public ResponseEntity<BaseResponseBody<?>> refresh(HttpServletRequest request, HttpServletResponse response){
-        String refreshToken = request.getHeader(Constant.REFRESH_TOKEN);
+        String refreshToken = request.getHeader(Constant.HEADER_REFRESH_TOKEN);
         if(refreshToken == null){
             throw new RuntimeException("리프레시 토큰이 존재하지 않습니다.");
         }
         JwtToken jwtToken = jwtService.reGenerateTokenSet(refreshToken);
-        response.setHeader(Constant.ACCESS_TOKEN, jwtToken.getAccessToken());
-        response.setHeader(Constant.REFRESH_TOKEN, jwtToken.getRefreshToken());
+        response.setHeader(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());
+        response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 }

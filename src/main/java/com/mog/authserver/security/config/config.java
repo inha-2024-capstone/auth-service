@@ -39,7 +39,8 @@ public class config {
                     return config;
                 })).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/user/sign-up", "/user/refresh").permitAll())
+                        .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
+                        .requestMatchers("/user/sign-in").authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
