@@ -2,6 +2,7 @@ package com.mog.authserver.jwt.service;
 
 
 import com.mog.authserver.jwt.JwtToken;
+import com.mog.authserver.jwt.exception.TokenInvalidException;
 import com.mog.authserver.jwt.util.JwtUtil;
 import com.mog.authserver.jwt.util.TokenExpireTime;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class JwtService {
 
     public JwtToken reGenerateTokenSet(String refreshToken){
         if(!jwtUtil.isTokenValid(refreshToken)){
-            throw new RuntimeException("유효하지 않은 토큰");
+            throw new TokenInvalidException();
         }
         Authentication authentication = jwtUtil.getAuthentication(refreshToken);
         return new JwtToken(
@@ -34,11 +35,11 @@ public class JwtService {
 
     public Authentication getAuthentication(String token){
         if(token == null){
-            throw new RuntimeException("Authorization is not present in the header");
+            throw new RuntimeException("Authorization 헤더가 존재하지 않습니다.");
         }
         else { // 토큰이 존재할 때.
             if (!jwtUtil.isTokenValid(token)) {
-                throw new RuntimeException("Access Token is not valid");
+                throw new TokenInvalidException();
             }
             return jwtUtil.getAuthentication(token);
         }
