@@ -7,13 +7,12 @@ import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import com.mog.authserver.user.service.UserInfoService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +24,7 @@ public class UserInfoController {
     private final JwtService jwtService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<?>> signUp(@Validated @RequestBody UserInfoRequestDTO userInfoRequestDTO){
+    public ResponseEntity<BaseResponseBody<?>> signUp(@Valid @RequestBody UserInfoRequestDTO userInfoRequestDTO){
         userInfoService.signUp(userInfoRequestDTO);
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
@@ -41,11 +40,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<BaseResponseBody<?>> refresh(HttpServletRequest request, HttpServletResponse response){
-        String refreshToken = request.getHeader(Constant.HEADER_REFRESH_TOKEN);
-        if(refreshToken == null){
-            throw new RuntimeException("리프레시 토큰이 존재하지 않습니다.");
-        }
+    public ResponseEntity<BaseResponseBody<?>> refresh(@RequestHeader(name = Constant.HEADER_REFRESH_TOKEN) String refreshToken, HttpServletResponse response){
         JwtToken jwtToken = jwtService.reGenerateTokenSet(refreshToken);
         response.setHeader(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());
         response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
