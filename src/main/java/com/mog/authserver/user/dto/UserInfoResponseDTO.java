@@ -9,13 +9,20 @@ import jakarta.validation.constraints.NotNull;
 public record UserInfoResponseDTO(
         @NotBlank
         String email,
+
         @NotBlank
         String username,
+
         Role role,
+
         Gender gender,
+
         String phoneNumber,
+
         String address,
+
         String nickName,
+
         @NotNull
         LoginSource loginSource){
 }

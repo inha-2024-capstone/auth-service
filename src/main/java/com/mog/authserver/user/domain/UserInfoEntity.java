@@ -21,8 +21,10 @@ public class UserInfoEntity extends BaseEntity {
 
     @Column(nullable = false, updatable = false)
     private String email;
+
     @Column(updatable = false)
     private String username;
+
     @Column(nullable = false)
     @Setter
     private String password;
@@ -35,7 +37,7 @@ public class UserInfoEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Size(min=13, max=13) @Pattern(regexp = "^010-\\d{4}-\\d{4}$", message = "전화번호는 010-XXXX-XXXX 형식이어야 합니다.")
+    @Pattern(regexp = "^010-\\d{4}-\\d{4}$", message = "전화번호는 010-XXXX-XXXX 형식이어야 합니다.")
     private String phoneNumber;
 
     @Setter

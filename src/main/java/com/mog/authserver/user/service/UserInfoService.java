@@ -23,13 +23,14 @@ public class UserInfoService {
 
     public UserInfoEntity signUp(UserInfoRequestDTO userInfoRequestDTO){
         UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfo(userInfoRequestDTO);
-        try {
-            findUserInfoByEmailAndLoginSource(userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
+        Boolean doesUserExist = userInfoRepository.existsByEmailAndLoginSource(userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
+        if(!doesUserExist){
             throw new UserAlreadyExistException();
         }
-        catch (UserNotFoundException userNotFoundException){
+        else {
             userInfoEntity.setPassword(passwordEncoder.encode(userInfoEntity.getPassword()));
-            return saveUserInfo(userInfoEntity);
+            userInfoRepository.save(userInfoEntity);
+            return userInfoEntity;
         }
     }
 
@@ -37,8 +38,7 @@ public class UserInfoService {
         return userInfoRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found With Given ID"));
     }
 
-
-    public UserInfoEntity findUserInfoByEmailAndLoginSource(String email, LoginSource source)  {
+    public UserInfoEntity findUserInfoByEmailAndLoginSource(String email, LoginSource source) throws UserNotFoundException {
         Optional<UserInfoEntity> userInfoEntityOptional = userInfoRepository.findByEmailAndLoginSource(email, source);
         return userInfoEntityOptional.orElseThrow(() -> new UserNotFoundException("User Not Found With Given Email and Login source"));
     }
