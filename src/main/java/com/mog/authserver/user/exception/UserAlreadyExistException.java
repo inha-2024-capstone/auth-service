@@ -5,7 +5,7 @@ import com.mog.authserver.common.status.enums.FailureStatus;
 
 public class UserAlreadyExistException extends BaseException {
 
-    public UserAlreadyExistException(){
-        super(FailureStatus.USER_ALREADY_EXISTED);
+    public UserAlreadyExistException(String message){
+        super(FailureStatus.USER_ALREADY_EXISTED, message);
     }
 }

@@ -1,4 +1,4 @@
-package com.mog.authserver.security;
+package com.mog.authserver.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
@@ -39,7 +38,9 @@ public class config {
                     config.setMaxAge(3600L);
                     return config;
                 })).csrf(AbstractHttpConfigurer::disable)
-                /*.authorizeHttpRequests((requests)->requests)*/
+                .authorizeHttpRequests((requests)->requests
+                        .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
+                        .requestMatchers("/user/sign-in").authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

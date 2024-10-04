@@ -24,8 +24,8 @@ public class UserInfoService {
     public UserInfoEntity signUp(UserInfoRequestDTO userInfoRequestDTO){
         UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfo(userInfoRequestDTO);
         Boolean doesUserExist = userInfoRepository.existsByEmailAndLoginSource(userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
-        if(!doesUserExist){
-            throw new UserAlreadyExistException();
+        if(doesUserExist){
+            throw new UserAlreadyExistException(userInfoEntity.getEmail());
         }
         else {
             userInfoEntity.setPassword(passwordEncoder.encode(userInfoEntity.getPassword()));
@@ -41,6 +41,10 @@ public class UserInfoService {
     public UserInfoEntity findUserInfoByEmailAndLoginSource(String email, LoginSource source) throws UserNotFoundException {
         Optional<UserInfoEntity> userInfoEntityOptional = userInfoRepository.findByEmailAndLoginSource(email, source);
         return userInfoEntityOptional.orElseThrow(() -> new UserNotFoundException("User Not Found With Given Email and Login source"));
+    }
+
+    public Boolean existUserInfoByEmailAndLoginSource(String email, LoginSource source) throws UserNotFoundException {
+        return userInfoRepository.existsByEmailAndLoginSource(email, source);
     }
 
     public UserInfoEntity saveUserInfo(UserInfoEntity userInfoEntity){
