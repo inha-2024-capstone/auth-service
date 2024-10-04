@@ -43,6 +43,10 @@ public class UserInfoService {
         return userInfoEntityOptional.orElseThrow(() -> new UserNotFoundException("User Not Found With Given Email and Login source"));
     }
 
+    public Boolean existUserInfoByEmailAndLoginSource(String email, LoginSource source) throws UserNotFoundException {
+        return userInfoRepository.existsByEmailAndLoginSource(email, source);
+    }
+
     public UserInfoEntity saveUserInfo(UserInfoEntity userInfoEntity){
         return userInfoRepository.save(userInfoEntity);
     }
