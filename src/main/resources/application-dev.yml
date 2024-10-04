@@ -5,3 +5,6 @@ spring:
     url: jdbc:mysql://localhost:3306/kim
     username: root
     password: 12345
+
+jwt:
+  secret: 2e158dca3324bbf4491a7ca7435f16c5df6bac981cc9865683ae47a2f18254e8
