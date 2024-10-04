@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum FailureStatus implements BaseStatus {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON4000", "잘못된 요청입니다."),
-    USER_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "USER4000", "주어진 이메일의 유저가 존재합니다.");
+    USER_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "USER4000", "주어진 이메일의 유저가 존재합니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4040", "유저가 존재하지 않습니다.");
 
 
     private final HttpStatus httpStatus;
