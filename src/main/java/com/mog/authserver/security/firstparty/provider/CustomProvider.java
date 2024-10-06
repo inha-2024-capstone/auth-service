@@ -30,7 +30,7 @@ public class CustomProvider implements AuthenticationProvider {
 
         if(passwordEncoder.matches(pwd, userInfoEntity.getPassword())){
             AuthenticatedUserInfo authenticatedUserInfo = UserInfoMapper.toAuthenticatedUserInfo(userInfoEntity);
-            log.info("login succeeded, email={}, loginSource={}", userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
+            log.info("로그인 완료, email={}, loginSource={}", userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
             return new UsernamePasswordAuthenticationToken(
                     authenticatedUserInfo, "", authenticatedUserInfo.authorities());
         }

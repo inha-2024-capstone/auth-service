@@ -1,4 +1,4 @@
-package com.mog.authserver.user;
+package com.mog.authserver.user.controller;
 
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.response.BaseResponseBody;
@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +23,7 @@ public class UserInfoController {
     private final JwtService jwtService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<?>> signUp(@Valid @RequestBody UserInfoRequestDTO userInfoRequestDTO){
+    public ResponseEntity<BaseResponseBody<Void>> signUp(@Valid @RequestBody UserInfoRequestDTO userInfoRequestDTO){
         userInfoService.signUp(userInfoRequestDTO);
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
@@ -32,8 +31,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/sign-in")
-    public ResponseEntity<BaseResponseBody<?>> signIn(Authentication authentication){
-
+    public ResponseEntity<BaseResponseBody<Void>> signIn(){
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody());
@@ -46,4 +44,12 @@ public class UserInfoController {
         response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<BaseResponseBody<Void>> testForSecurity(){
+        return ResponseEntity
+                .status(SuccessStatus.OK.getHttpStatus())
+                .body(SuccessStatus.OK.getBaseResponseBody());
+    }
+
 }
