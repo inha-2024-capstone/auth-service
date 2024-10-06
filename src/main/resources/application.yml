@@ -3,6 +3,10 @@ spring:
     name: authserver
   profiles:
     default: dev
+  config:
+    import: "application-oauth.yml"
+
+
   jpa: # jpa settings
     hibernate:
       ddl-auto: none

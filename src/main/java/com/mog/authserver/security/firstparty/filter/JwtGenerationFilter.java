@@ -21,7 +21,7 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("filter called");
+
         if(authentication != null){
             JwtToken jwtToken = jwtService.generateTokenSet(authentication);
             response.setHeader(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());

@@ -20,11 +20,11 @@ public class OAuth2UserUnlinkManager {
 
     public void unlink(OAuth2Provider provider, String accessToken, OAuth2UserInfo oAuth2UserInfo) {
         deleteOAuth2User(oAuth2UserInfo);
-        if (OAuth2Provider.GOOGLE.equals(provider)) {
+        if (provider.equals(OAuth2Provider.GOOGLE)) {
             googleOAuth2UserUnlink.unlink(accessToken);
-        } else if (OAuth2Provider.NAVER.equals(provider)) {
+        } else if (provider.equals(OAuth2Provider.NAVER)) {
             naverOAuth2UserUnlink.unlink(accessToken);
-        } else if (OAuth2Provider.KAKAO.equals(provider)) {
+        } else if (provider.equals(OAuth2Provider.KAKAO)) {
             kakaoOAuth2UserUnlink.unlink(accessToken);
         } else {
             throw new OAuth2AuthenticationProcessingException(

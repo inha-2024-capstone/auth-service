@@ -30,8 +30,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     private String resolveJwtToken(HttpServletRequest request){
         String bearerToken = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        if (bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
+        if (bearerToken != null) {
+            if (bearerToken.startsWith("Bearer")) {
+                return bearerToken.substring(7);
+            }
         }
         throw new TokenNotPresentException();
     }

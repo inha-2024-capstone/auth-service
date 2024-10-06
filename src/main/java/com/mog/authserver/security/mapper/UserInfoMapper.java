@@ -45,11 +45,10 @@ public class UserInfoMapper {
         OAuth2Provider oAuth2Provider = oAuth2UserInfo.getProvider();
         LoginSource loginSource;
         switch (oAuth2Provider){
-            case GOOGLE -> loginSource = LoginSource.GOOGLE;
-            case NAVER -> loginSource = LoginSource.NAVER;
-            case KAKAO -> loginSource = LoginSource.KAKAO;
+            case GOOGLE -> {return LoginSource.GOOGLE;}
+            case NAVER -> {return LoginSource.NAVER;}
+            case KAKAO -> {return LoginSource.KAKAO;}
             default -> throw new RuntimeException("provider 가 존재하지 않습니다.");
         }
-        return loginSource;
     }
 }
