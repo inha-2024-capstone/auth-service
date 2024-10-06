@@ -1,6 +1,6 @@
 package com.mog.authserver.security.thirdparty.user;
 
-import com.mog.mog_authserver.security.thridparty.exception.OAuth2AuthenticationProcessingException;
+import com.mog.authserver.security.thirdparty.exception.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 
