@@ -2,6 +2,7 @@ package com.mog.authserver.security.config;
 
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.security.firstparty.filter.JwtGenerationFilter;
+import com.mog.authserver.security.firstparty.filter.JwtValidationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,9 +46,10 @@ public class SecurityConfig {
                     return config;
                 })).csrf(AbstractHttpConfigurer::disable)
                 .addFilterAfter(new JwtGenerationFilter(jwtService), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
-                        .requestMatchers("/user/sign-in").authenticated())
+                        .requestMatchers("/user/sign-in", "/user/test").authenticated())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

@@ -1,4 +1,4 @@
-package com.mog.authserver.user;
+package com.mog.authserver.user.controller;
 
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.response.BaseResponseBody;
@@ -44,4 +44,12 @@ public class UserInfoController {
         response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<BaseResponseBody<?>> testForSecurity(){
+        return ResponseEntity
+                .status(SuccessStatus.OK.getHttpStatus())
+                .body(SuccessStatus.OK.getBaseResponseBody());
+    }
+
 }
