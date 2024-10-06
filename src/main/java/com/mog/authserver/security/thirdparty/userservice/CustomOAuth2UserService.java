@@ -46,7 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // OAuth2UserInfo field value validation
         if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
-            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
+            throw new OAuth2AuthenticationProcessingException("OAuth2 제공자로부터 이메일을 받지 못했습니다.");
         }
 
         return new OAuth2UserPrincipal(oAuth2UserInfo);
