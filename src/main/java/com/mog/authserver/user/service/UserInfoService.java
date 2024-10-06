@@ -51,4 +51,8 @@ public class UserInfoService {
     public UserInfoEntity saveUserInfo(UserInfoEntity userInfoEntity){
         return userInfoRepository.save(userInfoEntity);
     }
+
+    public void deleteUserInfo(UserInfoEntity userInfoEntity){
+        userInfoRepository.delete(userInfoEntity);
+    }
 }

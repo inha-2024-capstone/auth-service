@@ -66,14 +66,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = resolveTargetURI(request);
         String mode = resolveMode(request);
         OAuth2UserPrincipal principal = getOAuth2UserPrincipal(authentication);
-
         // 실패
         if (principal != null) {
             // TODO: DB 저장
             // TODO: 액세스 토큰, 리프레시 토큰 발급
             // TODO: 리프레시 토큰 DB 저장
+            OAuth2UserInfo oAuth2UserInfo = principal.getUserInfo();
             if ("login".equalsIgnoreCase(mode)) {
-                OAuth2UserInfo oAuth2UserInfo = principal.getUserInfo();
 
                 log.info("oauth login succeeded with email={}, provider={}",
                         oAuth2UserInfo.getEmail(),
@@ -110,7 +109,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
                 // TODO: DB 삭제
                 // TODO: 리프레시 토큰 삭제
-                oAuth2UserUnlinkManager.unlink(provider, accessToken);
+                oAuth2UserUnlinkManager.unlink(provider, accessToken, oAuth2UserInfo);
 
                 return UriComponentsBuilder.fromUriString(targetUrl)
                         .build().toUriString();

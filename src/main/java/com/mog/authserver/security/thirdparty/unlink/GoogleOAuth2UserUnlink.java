@@ -1,5 +1,6 @@
 package com.mog.authserver.security.thirdparty.unlink;
 
+import com.mog.authserver.user.service.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,7 +13,7 @@ public class GoogleOAuth2UserUnlink implements OAuth2UserUnlink {
 
     private static final String URL = "https://oauth2.googleapis.com/revoke";
     private final RestTemplate restTemplate;
-
+    private final UserInfoService userInfoService;
     @Override
     public void unlink(String accessToken) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
