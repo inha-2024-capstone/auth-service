@@ -10,7 +10,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
 jwt:
   time:
     accessTokenExpireTime: 5

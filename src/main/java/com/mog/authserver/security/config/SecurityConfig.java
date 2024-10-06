@@ -3,6 +3,10 @@ package com.mog.authserver.security.config;
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.security.firstparty.filter.JwtGenerationFilter;
 import com.mog.authserver.security.firstparty.filter.JwtValidationFilter;
+import com.mog.authserver.security.thirdparty.handler.OAuth2AuthenticationFailureHandler;
+import com.mog.authserver.security.thirdparty.handler.OAuth2AuthenticationSuccessHandler;
+import com.mog.authserver.security.thirdparty.requestrepository.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.mog.authserver.security.thirdparty.userservice.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +28,10 @@ import java.util.Collections;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtService jwtService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,6 +58,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
                         .requestMatchers("/user/sign-in", "/user/test").authenticated())
+                .oauth2Login(configure ->
+                        configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                                .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

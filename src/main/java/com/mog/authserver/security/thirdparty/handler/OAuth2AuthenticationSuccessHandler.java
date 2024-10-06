@@ -1,5 +1,6 @@
 package com.mog.authserver.security.thirdparty.handler;
 
+import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.security.mapper.UserInfoMapper;
@@ -12,6 +13,7 @@ import com.mog.authserver.security.thirdparty.util.CookieUtils;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Role;
+import com.mog.authserver.user.exception.UserNotFoundException;
 import com.mog.authserver.user.service.UserInfoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -79,24 +81,27 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 );
 
                 UserInfoEntity userInfoEntity;
-                userInfoEntity = userInfoService.findUserInfoByEmailAndLoginSource
-                        (oAuth2UserInfo.getEmail(), UserInfoMapper.getLoginSource(oAuth2UserInfo));
-
-                boolean isSignedUp = userInfoEntity != null;
-                response.setHeader("sign-up", Boolean.toString(isSignedUp));
-
-                if(!isSignedUp){ // 회원가입이 안 되어 있다면.
+                boolean isSignedUp;
+                try{
+                    userInfoEntity = userInfoService.findUserInfoByEmailAndLoginSource
+                            (oAuth2UserInfo.getEmail(), UserInfoMapper.getLoginSource(oAuth2UserInfo));
+                    isSignedUp = false;
+                }
+                catch (UserNotFoundException userNotFoundException){
                     UserInfoEntity convertedUserInfoEntity = UserInfoMapper.toUserInfoEntity(oAuth2UserInfo);
                     userInfoEntity = userInfoService.saveUserInfo(convertedUserInfoEntity);
+                    isSignedUp = true;
                 }
+
                 // Authority 객체 생성 후 넘겨줘야 함.
                 Authentication usernamePasswordAuthenticationToken = getUsernamePasswordAuthenticationToken(userInfoEntity);
 
                 JwtToken jwtToken = jwtService.generateTokenSet(usernamePasswordAuthenticationToken);
 
                 return UriComponentsBuilder.fromUriString(targetUrl)
-                        .queryParam("Authorization", jwtToken.getAccessToken()) // Test
-                        .queryParam("refresh", jwtToken.getRefreshToken())
+                        .queryParam(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken()) // Test
+                        .queryParam(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken())
+                        .queryParam("sign-up", String.valueOf(isSignedUp))
                         .build().toUriString();
             } else if ("unlink".equalsIgnoreCase(mode)) {
 
