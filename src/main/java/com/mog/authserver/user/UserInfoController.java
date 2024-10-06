@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,8 +31,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/sign-in")
-    public ResponseEntity<BaseResponseBody<?>> signIn(Authentication authentication){
-
+    public ResponseEntity<BaseResponseBody<?>> signIn(){
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody());
