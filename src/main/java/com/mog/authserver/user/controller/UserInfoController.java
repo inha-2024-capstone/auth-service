@@ -23,7 +23,7 @@ public class UserInfoController {
     private final JwtService jwtService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<?>> signUp(@Valid @RequestBody UserInfoRequestDTO userInfoRequestDTO){
+    public ResponseEntity<BaseResponseBody<Void>> signUp(@Valid @RequestBody UserInfoRequestDTO userInfoRequestDTO){
         userInfoService.signUp(userInfoRequestDTO);
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
@@ -31,7 +31,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/sign-in")
-    public ResponseEntity<BaseResponseBody<?>> signIn(){
+    public ResponseEntity<BaseResponseBody<Void>> signIn(){
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody());
@@ -46,7 +46,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<BaseResponseBody<?>> testForSecurity(){
+    public ResponseEntity<BaseResponseBody<Void>> testForSecurity(){
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody());

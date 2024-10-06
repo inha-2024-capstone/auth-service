@@ -66,9 +66,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2UserPrincipal principal = getOAuth2UserPrincipal(authentication);
         // 실패
         if (principal != null) {
-            // TODO: DB 저장
-            // TODO: 액세스 토큰, 리프레시 토큰 발급
-            // TODO: 리프레시 토큰 DB 저장
             OAuth2UserInfo oAuth2UserInfo = principal.getUserInfo();
             if ("login".equalsIgnoreCase(mode)) {
 
@@ -100,7 +97,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                         .queryParam(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken())
                         .queryParam("sign-up", String.valueOf(isSignedUp))
                         .build().toUriString();
-            } else if ("unlink".equalsIgnoreCase(mode)) {
+            } else if (mode.equalsIgnoreCase("unlink")) {
 
                 String accessToken = principal.getUserInfo().getAccessToken();
                 OAuth2Provider provider = principal.getUserInfo().getProvider();

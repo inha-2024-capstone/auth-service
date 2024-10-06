@@ -1,7 +1,6 @@
 package com.mog.authserver.security.thirdparty.handler;
 
 import com.mog.authserver.security.thirdparty.requestrepository.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.mog.authserver.security.thirdparty.unlink.OAuth2UserUnlinkManager;
 import com.mog.authserver.security.thirdparty.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import java.io.IOException;
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-    private final OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,

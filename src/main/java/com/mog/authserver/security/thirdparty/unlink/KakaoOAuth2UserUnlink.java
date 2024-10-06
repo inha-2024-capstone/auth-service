@@ -1,6 +1,7 @@
 package com.mog.authserver.security.thirdparty.unlink;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,8 @@ import org.springframework.web.client.RestClient;
 @Component
 public class KakaoOAuth2UserUnlink implements OAuth2UserUnlink {
 
-    private static final String URL = "https://kapi.kakao.com/v1/user/unlink";
+    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    private String URL;
     private final RestClient restClient;
 
     @Override

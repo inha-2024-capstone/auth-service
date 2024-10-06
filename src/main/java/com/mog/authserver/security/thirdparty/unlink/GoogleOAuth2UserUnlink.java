@@ -1,6 +1,7 @@
 package com.mog.authserver.security.thirdparty.unlink;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -10,7 +11,8 @@ import org.springframework.web.client.RestClient;
 @Component
 public class GoogleOAuth2UserUnlink implements OAuth2UserUnlink {
 
-    private static final String URL = "https://oauth2.googleapis.com/revoke";
+    @Value("${google.unlink}")
+    private String URL;
     private final RestClient restClient;
 
     @Override
