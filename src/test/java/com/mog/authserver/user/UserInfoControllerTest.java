@@ -174,6 +174,22 @@ class UserInfoControllerTest {
 
     }
 
+    @Test
+    @DisplayName("get pass id test")
+    void getPassIdTest() throws Exception {
+        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        Authentication authentication = createAuthentication(signUp);
+        JwtToken jwtToken = jwtService.generateTokenSet(authentication);
+
+        mockMvc.perform(get("/user/pass-id")
+                        .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
+                .andExpect(status().isOk())
+                .andExpect(header().string(Constant.HEADER_USER_ID, String.valueOf(signUp.getId())))
+                .andExpect(jsonPath("$.isSucceeded").value("true"))
+                .andExpect(jsonPath("$.message").value("성공입니다."));
+
+    }
+
     private Authentication createAuthentication(UserInfoEntity userInfoEntity){
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));

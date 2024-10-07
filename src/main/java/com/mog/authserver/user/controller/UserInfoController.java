@@ -64,4 +64,12 @@ public class UserInfoController {
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody(UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity)));
     }
+
+    @GetMapping("/pass-id")
+    public ResponseEntity<BaseResponseBody<Void>> passToGateway(HttpServletResponse response, Authentication authentication){
+        AuthenticatedUserInfo authenticatedUserInfo = (AuthenticatedUserInfo) authentication.getPrincipal();
+        response.setHeader(Constant.HEADER_USER_ID, String.valueOf(authenticatedUserInfo.id()));
+        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
+                .body(SuccessStatus.OK.getBaseResponseBody());
+    }
 }
