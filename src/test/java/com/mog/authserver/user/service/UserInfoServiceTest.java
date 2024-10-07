@@ -7,13 +7,12 @@ import com.mog.authserver.user.domain.enums.Role;
 import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import com.mog.authserver.user.exception.UserAlreadyExistException;
 import com.mog.authserver.user.exception.UserNotFoundException;
+import com.mog.authserver.user.pass.UserInfoPass;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -62,6 +61,29 @@ class UserInfoServiceTest {
             userInfoService.signUp(userInfoEntity3);
         }).isInstanceOf(UserAlreadyExistException.class);
 
+    }
+
+    @Test
+    void 패스포트_전달받기_테스트(){
+        // Given
+        UserInfoEntity userInfoEntity = new UserInfoEntity("rlwjdd234@naver.com", "kim", "qwer1234!", Role.ADMIN,
+                Gender.MALE, "010-1234-5678", "incheon", "whatup", "http://localhost:2020",LoginSource.THIS);
+        UserInfoPass userInfoPass = new UserInfoPass(
+                userInfoEntity.getEmail(),
+                userInfoEntity.getUsername(),
+                userInfoEntity.getRole(),
+                userInfoEntity.getGender(),
+                userInfoEntity.getPhoneNumber(),
+                userInfoEntity.getAddress(),
+                userInfoEntity.getNickName(),
+                userInfoEntity.getImageUrl(),
+                userInfoEntity.getLoginSource()
+        );
+        // When
+        UserInfoEntity saveUserInfo = userInfoService.saveUserInfo(userInfoEntity);
+        UserInfoPass findUserInfoPass = userInfoService.findUserInfoPass(saveUserInfo.getId());
+        // Then
+        Assertions.assertThat(findUserInfoPass).isEqualTo(userInfoPass);
     }
 
 }

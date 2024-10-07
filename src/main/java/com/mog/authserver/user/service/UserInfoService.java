@@ -6,6 +6,7 @@ import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import com.mog.authserver.user.exception.UserAlreadyExistException;
 import com.mog.authserver.user.exception.UserNotFoundException;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
+import com.mog.authserver.user.pass.UserInfoPass;
 import com.mog.authserver.user.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,5 +54,10 @@ public class UserInfoService {
 
     public void deleteUserInfo(UserInfoEntity userInfoEntity){
         userInfoRepository.delete(userInfoEntity);
+    }
+
+    public UserInfoPass findUserInfoPass(Long id) {
+        UserInfoEntity userInfoById = this.findUserInfoById(id);
+        return  UserInfoEntityMapper.toUserInfoPass(userInfoById);
     }
 }
