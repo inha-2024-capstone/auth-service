@@ -48,7 +48,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
-                        .requestMatchers("/user/sign-in", "/user/test", "/user/info", "/user/pass-id").authenticated())
+                        .requestMatchers("/user/sign-in", "/user/test", "/user/info", "/user/pass-id"
+                        , "/user/pass-info/{id}").authenticated())
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
                                 .userInfoEndpoint(config -> config.userService(customOAuth2UserService))

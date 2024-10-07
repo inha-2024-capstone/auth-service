@@ -10,6 +10,7 @@ import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import com.mog.authserver.user.dto.UserInfoResponseDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
+import com.mog.authserver.user.pass.UserInfoPass;
 import com.mog.authserver.user.service.UserInfoService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -66,10 +67,17 @@ public class UserInfoController {
     }
 
     @GetMapping("/pass-id")
-    public ResponseEntity<BaseResponseBody<Void>> passToGateway(HttpServletResponse response, Authentication authentication){
+    public ResponseEntity<BaseResponseBody<Void>> passIdToService(HttpServletResponse response, Authentication authentication){
         AuthenticatedUserInfo authenticatedUserInfo = (AuthenticatedUserInfo) authentication.getPrincipal();
         response.setHeader(Constant.HEADER_USER_ID, String.valueOf(authenticatedUserInfo.id()));
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody());
+    }
+
+    @GetMapping("/pass-info/{id}")
+    public ResponseEntity<BaseResponseBody<UserInfoPass>> getUserInfoPass(@PathVariable Long id){
+        UserInfoPass userInfoPass = userInfoService.findUserInfoPass(id);
+        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
+                .body(SuccessStatus.OK.getBaseResponseBody(userInfoPass));
     }
 }

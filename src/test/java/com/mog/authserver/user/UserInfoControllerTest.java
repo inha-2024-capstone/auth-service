@@ -15,6 +15,7 @@ import com.mog.authserver.user.domain.enums.Role;
 import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import com.mog.authserver.user.dto.UserInfoResponseDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
+import com.mog.authserver.user.pass.UserInfoPass;
 import com.mog.authserver.user.service.UserInfoService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -187,6 +188,27 @@ class UserInfoControllerTest {
                 .andExpect(header().string(Constant.HEADER_USER_ID, String.valueOf(signUp.getId())))
                 .andExpect(jsonPath("$.isSucceeded").value("true"))
                 .andExpect(jsonPath("$.message").value("성공입니다."));
+
+    }
+
+    @Test
+    @DisplayName("/user/pass-info/{id} 테스트: 사용자 id를 통한 UserInfoPass 객체 반환")
+    void userInfoPassTest() throws Exception {
+        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        Authentication authentication = createAuthentication(signUp);
+        JwtToken jwtToken = jwtService.generateTokenSet(authentication);
+
+        UserInfoPass userInfoPass = UserInfoEntityMapper.toUserInfoPass(signUp);
+        String passToJson = objectMapper.writeValueAsString(SuccessStatus.OK.getBaseResponseBody(userInfoPass));
+
+        MvcResult mvcResult = mockMvc.perform(get("/user/pass-info/" + signUp.getId())
+                        .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSucceeded").value("true"))
+                .andExpect(jsonPath("$.message").value("성공입니다."))
+                .andReturn();
+
+        Assertions.assertEquals(passToJson, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));
 
     }
 
