@@ -9,6 +9,7 @@ import com.mog.authserver.user.exception.UserAlreadyExistException;
 import com.mog.authserver.user.exception.UserNotFoundException;
 import com.mog.authserver.user.pass.UserInfoPass;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ class UserInfoServiceTest {
     private UserInfoService userInfoService;
 
     @Test
+    @DisplayName("이메일과 로그인 소스를 통한 UserInfoEntity 반환")
     void findUserInfoByEmailAndLoginSourceTest(){
         // Given
         UserInfoEntity userInfoEntity = new UserInfoEntity("rlwjdd234@naver.com", "kim", "qwer1234!", Role.ADMIN,
@@ -41,6 +43,7 @@ class UserInfoServiceTest {
     }
 
     @Test
+    @DisplayName("회원가입 수행, 이메일이 다르거나 로그인 소스가 달라야 함.")
     void signUpTest(){
         // Given
         UserInfoRequestDTO userInfoEntity1 = new UserInfoRequestDTO("rlwjddl234@naver.com", "kim", "qwer1234!", Role.ADMIN,
@@ -64,6 +67,7 @@ class UserInfoServiceTest {
     }
 
     @Test
+    @DisplayName("id를 통한 UserInfoPass 객체 반환")
     void findUserInfoPassTest(){
         // Given
         UserInfoEntity userInfoEntity = new UserInfoEntity("rlwjdd234@naver.com", "kim", "qwer1234!", Role.ADMIN,

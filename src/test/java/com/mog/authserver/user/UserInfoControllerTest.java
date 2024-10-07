@@ -92,7 +92,7 @@ class UserInfoControllerTest {
 
 
     @Test
-    @DisplayName("/user/sign-up test")
+    @DisplayName("/user/sign-up API 테스트: 회원가입")
     void signUpTest() throws Exception {
 
         String userJson = objectMapper.writeValueAsString(userInfoRequestDTO);
@@ -108,7 +108,7 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("/user/refresh test")
+    @DisplayName("/user/refresh 테스트: 리프레시 토큰을 통한 토큰셋 재발급")
     void refreshTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(signUp));
@@ -124,7 +124,7 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("/user/sign-in test")
+    @DisplayName("/user/sign-in test: 로그인")
     void signInTest() throws Exception {
         userInfoService.signUp(userInfoRequestDTO);
         // 자격증명을 전달
@@ -140,7 +140,7 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("jwtValidationFilter test")
+    @DisplayName("jwtValidationFilter 테스트: 엑세스 토큰을 통한 인증")
     void jwtValidationFilterTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(signUp));
@@ -154,7 +154,7 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("/user/info test")
+    @DisplayName("/user/info 테스트: 엑세스 토큰을 통한 유저정보 반환")
     void userInfoTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         Authentication authentication = createAuthentication(signUp);
@@ -175,7 +175,7 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("/user/pass-id test")
+    @DisplayName("/user/pass-id 테스트: 엑세스 토큰을 통한 UserInfoPass 반환")
     void passIdTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         Authentication authentication = createAuthentication(signUp);
