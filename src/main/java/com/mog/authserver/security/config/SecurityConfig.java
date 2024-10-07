@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
                         .requestMatchers("/user/sign-in", "/user/test", "/user/info", "/user/pass-id"
-                        , "/user/pass-info/{id}").authenticated())
+                        , "/user/pass-info/{id}", "/oauth/sign-up").authenticated())
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
                                 .userInfoEndpoint(config -> config.userService(customOAuth2UserService))

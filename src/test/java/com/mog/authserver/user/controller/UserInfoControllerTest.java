@@ -1,12 +1,10 @@
-package com.mog.authserver.user;
+package com.mog.authserver.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
-import com.mog.authserver.security.config.SecurityConfig;
-import com.mog.authserver.security.firstparty.filter.JwtValidationFilter;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
@@ -24,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,7 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest  // 모든 빈을 로드
 @AutoConfigureMockMvc
 @Transactional
-@Import({SecurityConfig.class, JwtValidationFilter.class})
 class UserInfoControllerTest {
 
     @Autowired
