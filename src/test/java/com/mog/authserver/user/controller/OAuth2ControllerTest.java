@@ -127,15 +127,7 @@ class OAuth2ControllerTest {
                 .andReturn();
 
         UserInfoEntity userInfoByEmailAndLoginSource = userInfoService.findUserInfoByEmailAndLoginSource(userInfoRequestDTO.email(), userInfoRequestDTO.loginSource());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getEmail(), userInfoRequestDTO.email());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getUsername(), userInfoRequestDTO.username());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getPassword(), userInfoRequestDTO.password());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getRole(), userInfoRequestDTO.role());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getGender(), userInfoRequestDTO.gender());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getAddress(), userInfoRequestDTO.address());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getPhoneNumber(), userInfoRequestDTO.phoneNumber());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getLoginSource(), userInfoRequestDTO.loginSource());
-        Assertions.assertEquals(userInfoByEmailAndLoginSource.getNickName(), userInfoRequestDTO.nickName());
+        Assertions.assertEquals(userInfoRequestDTO, UserInfoEntityMapper.toUserInfoRequestDTO(userInfoByEmailAndLoginSource));
 
     }
 

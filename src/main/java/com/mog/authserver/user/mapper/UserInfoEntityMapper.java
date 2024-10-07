@@ -48,6 +48,20 @@ public class UserInfoEntityMapper {
         );
     }
 
+    public static UserInfoRequestDTO toUserInfoRequestDTO(UserInfoEntity userInfoEntity){
+        return new UserInfoRequestDTO(
+                userInfoEntity.getEmail(),
+                userInfoEntity.getUsername(),
+                userInfoEntity.getPassword(),
+                userInfoEntity.getRole(),
+                userInfoEntity.getGender(),
+                userInfoEntity.getPhoneNumber(),
+                userInfoEntity.getAddress(),
+                userInfoEntity.getNickName(),
+                userInfoEntity.getLoginSource()
+        );
+    }
+
     public static UserInfoPass toUserInfoPass(UserInfoEntity userInfoEntity){
         return new UserInfoPass(
                 userInfoEntity.getEmail(),
