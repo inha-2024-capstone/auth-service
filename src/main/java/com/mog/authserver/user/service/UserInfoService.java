@@ -22,7 +22,7 @@ public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserInfoEntity oAuthSignUp(UserInfoRequestDTO userInfoRequestDTO, Long id){
+    public UserInfoEntity modifyUserInfo(UserInfoRequestDTO userInfoRequestDTO, Long id){
         UserInfoEntity userInfoById = this.findUserInfoById(id);
         userInfoById.setUserInfoEntityByUserInfoRequest(userInfoRequestDTO);
         return userInfoRepository.save(userInfoById);

@@ -100,7 +100,7 @@ class UserInfoServiceTest {
                 null, Gender.MALE, "010-1234-5678", "Seoul", "hi", LoginSource.GOOGLE);
         //when
         UserInfoEntity saveUserInfo = userInfoService.saveUserInfo(userInfoEntity);
-        UserInfoEntity signUp = userInfoService.oAuthSignUp(userInfoRequestDTO, saveUserInfo.getId());
+        UserInfoEntity signUp = userInfoService.modifyUserInfo(userInfoRequestDTO, saveUserInfo.getId());
 
         //then
         Assertions.assertThat(saveUserInfo).isEqualTo(signUp);

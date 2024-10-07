@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,7 @@ import java.util.List;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,7 +68,7 @@ class OAuth2ControllerTest {
     public void setup() {
         // RequestDTO 생성
         userInfoRequestDTO = new UserInfoRequestDTO(
-                "rlwjddl234@naver.com",
+                "rlwjddl1596@google.com",
                 "kim",
                 "qwer1234567!",
                 Role.USER,
@@ -89,8 +91,8 @@ class OAuth2ControllerTest {
     }
 
     @Test
-    @DisplayName("/oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 가져옴")
-    public void oAuthSignUpTest() throws Exception {
+    @DisplayName("GET /oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 가져옴")
+    public void oAuthSignUpTestGet() throws Exception {
         Authentication authentication = createAuthentication(userInfoEntity);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
@@ -105,6 +107,35 @@ class OAuth2ControllerTest {
         String responseJson = objectMapper
                 .writeValueAsString(SuccessStatus.OK.getBaseResponseBody(UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity)));
         Assertions.assertEquals(responseJson, contentAsString);
+
+    }
+
+    @Test
+    @DisplayName("POST /oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 수정 후 저장")
+    public void oAuthSignUpTestPost() throws Exception {
+
+        Authentication authentication = createAuthentication(userInfoEntity);
+        JwtToken jwtToken = jwtService.generateTokenSet(authentication);
+
+        mockMvc.perform(patch("/oauth/sign-up")
+                        .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userInfoRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSucceeded").value("true"))
+                .andExpect(jsonPath("$.message").value("성공입니다."))
+                .andReturn();
+
+        UserInfoEntity userInfoByEmailAndLoginSource = userInfoService.findUserInfoByEmailAndLoginSource(userInfoRequestDTO.email(), userInfoRequestDTO.loginSource());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getEmail(), userInfoRequestDTO.email());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getUsername(), userInfoRequestDTO.username());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getPassword(), userInfoRequestDTO.password());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getRole(), userInfoRequestDTO.role());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getGender(), userInfoRequestDTO.gender());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getAddress(), userInfoRequestDTO.address());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getPhoneNumber(), userInfoRequestDTO.phoneNumber());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getLoginSource(), userInfoRequestDTO.loginSource());
+        Assertions.assertEquals(userInfoByEmailAndLoginSource.getNickName(), userInfoRequestDTO.nickName());
 
     }
 

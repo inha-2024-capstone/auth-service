@@ -5,16 +5,16 @@ import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
+import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import com.mog.authserver.user.dto.UserInfoResponseDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.service.UserInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,6 +30,12 @@ public class OAuth2Controller {
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody(UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity)));
+    }
+
+    @PatchMapping("/sign-up")
+    public ResponseEntity<BaseResponseBody<?>> singUp(@Valid @RequestBody UserInfoRequestDTO userRequestDto, Authentication authentication){
+        userInfoService.modifyUserInfo(userRequestDto, getIdFromAuthentication(authentication));
+        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 
     public Long getIdFromAuthentication(Authentication authentication) {
