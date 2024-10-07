@@ -22,6 +22,12 @@ public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public UserInfoEntity oAuthSignUp(UserInfoRequestDTO userInfoRequestDTO, Long id){
+        UserInfoEntity userInfoById = this.findUserInfoById(id);
+        userInfoById.setUserInfoEntityByUserInfoRequest(userInfoRequestDTO);
+        return userInfoRepository.save(userInfoById);
+    }
+
     public UserInfoEntity signUp(UserInfoRequestDTO userInfoRequestDTO){
         UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfo(userInfoRequestDTO);
         Boolean doesUserExist = userInfoRepository.existsByEmailAndLoginSource(userInfoEntity.getEmail(), userInfoEntity.getLoginSource());

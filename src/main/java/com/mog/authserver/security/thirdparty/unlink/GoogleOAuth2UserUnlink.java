@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClient;
 @Component
 public class GoogleOAuth2UserUnlink implements OAuth2UserUnlink {
 
-    @Value("${google.unlink}")
+    @Value("${unlink.google}")
     private String URL;
     private final RestClient restClient;
 

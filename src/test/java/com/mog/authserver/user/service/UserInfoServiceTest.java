@@ -90,4 +90,20 @@ class UserInfoServiceTest {
         Assertions.assertThat(findUserInfoPass).isEqualTo(userInfoPass);
     }
 
+    @Test
+    @DisplayName("id와 UserInfoRequestDTO를 통한 OAuth2SignUp 테스트")
+    void oAuth2SignUpTest(){
+        //given
+        UserInfoEntity userInfoEntity = new UserInfoEntity("rlwjddl1596@google.com", null, "qwer12341234!", Role.USER,
+                null, null, null, null, "http://localhost:2020",LoginSource.GOOGLE);
+        UserInfoRequestDTO userInfoRequestDTO = new UserInfoRequestDTO(null, "kim", null,
+                null, Gender.MALE, "010-1234-5678", "Seoul", "hi", LoginSource.GOOGLE);
+        //when
+        UserInfoEntity saveUserInfo = userInfoService.saveUserInfo(userInfoEntity);
+        UserInfoEntity signUp = userInfoService.oAuthSignUp(userInfoRequestDTO, saveUserInfo.getId());
+
+        //then
+        Assertions.assertThat(saveUserInfo).isEqualTo(signUp);
+    }
+
 }

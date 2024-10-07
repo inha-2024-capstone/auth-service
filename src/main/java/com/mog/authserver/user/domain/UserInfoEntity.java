@@ -4,9 +4,9 @@ import com.mog.authserver.common.entity.BaseEntity;
 import com.mog.authserver.user.domain.enums.Gender;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.domain.enums.Role;
+import com.mog.authserver.user.dto.UserInfoRequestDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,5 +51,13 @@ public class UserInfoEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private LoginSource loginSource;
+
+    public void setUserInfoEntityByUserInfoRequest(UserInfoRequestDTO userInfoRequestDTO){
+        if(userInfoRequestDTO.gender() != null) this.gender = userInfoRequestDTO.gender();
+        if(userInfoRequestDTO.nickName() != null) this.nickName = userInfoRequestDTO.nickName();
+        if(userInfoRequestDTO.phoneNumber() != null) this.phoneNumber = userInfoRequestDTO.phoneNumber();
+        if(userInfoRequestDTO.address() != null) this.address = userInfoRequestDTO.address();
+        if(userInfoRequestDTO.username() != null) this.username = userInfoRequestDTO.username();
+    }
 
 }
