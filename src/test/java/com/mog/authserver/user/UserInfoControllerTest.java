@@ -92,7 +92,7 @@ class UserInfoControllerTest {
 
 
     @Test
-    @DisplayName("sign up test")
+    @DisplayName("/user/sign-up test")
     void signUpTest() throws Exception {
 
         String userJson = objectMapper.writeValueAsString(userInfoRequestDTO);
@@ -108,7 +108,7 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("refresh test")
+    @DisplayName("/user/refresh test")
     void refreshTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(signUp));
@@ -124,8 +124,8 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("sign in test")
-    void loginTest() throws Exception {
+    @DisplayName("/user/sign-in test")
+    void signInTest() throws Exception {
         userInfoService.signUp(userInfoRequestDTO);
         // 자격증명을 전달
         String authorization = Base64.getEncoder().encodeToString((userInfoRequestDTO.email() + ":" + userInfoRequestDTO.password()).getBytes());
@@ -140,8 +140,8 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("jwt validation test")
-    void jwtValidationTest() throws Exception {
+    @DisplayName("jwtValidationFilter test")
+    void jwtValidationFilterTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(signUp));
 
@@ -154,8 +154,8 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("get user info test")
-    void getUserTest() throws Exception {
+    @DisplayName("/user/info test")
+    void userInfoTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         Authentication authentication = createAuthentication(signUp);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
@@ -175,8 +175,8 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @DisplayName("get pass id test")
-    void getPassIdTest() throws Exception {
+    @DisplayName("/user/pass-id test")
+    void passIdTest() throws Exception {
         UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
         Authentication authentication = createAuthentication(signUp);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);

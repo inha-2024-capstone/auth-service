@@ -64,7 +64,7 @@ class UserInfoServiceTest {
     }
 
     @Test
-    void 패스포트_전달받기_테스트(){
+    void findUserInfoPassTest(){
         // Given
         UserInfoEntity userInfoEntity = new UserInfoEntity("rlwjdd234@naver.com", "kim", "qwer1234!", Role.ADMIN,
                 Gender.MALE, "010-1234-5678", "incheon", "whatup", "http://localhost:2020",LoginSource.THIS);
