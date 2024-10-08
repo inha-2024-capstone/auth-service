@@ -10,7 +10,7 @@ import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.domain.enums.Role;
-import com.mog.authserver.user.dto.UserInfoRequestDTO;
+import com.mog.authserver.user.dto.UserInfoSignUpDTO;
 import com.mog.authserver.user.dto.UserInfoResponseDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.pass.UserInfoPass;
@@ -63,14 +63,14 @@ class UserInfoControllerTest {
 
     private MockMvc mockMvc;
 
-    private UserInfoRequestDTO userInfoRequestDTO;
+    private UserInfoSignUpDTO userInfoSignUpRequestDTO;
 
     private UserInfoResponseDTO userInfoResponseDTO;
 
     @BeforeEach
     public void setup() {
         // RequestDTO 생성
-        userInfoRequestDTO = new UserInfoRequestDTO("rlwjddl234@naver.com",
+        userInfoSignUpRequestDTO = new UserInfoSignUpDTO("rlwjddl234@naver.com",
                 "kim",
                 "qwer1234567!",
                 Role.ADMIN,
@@ -92,7 +92,7 @@ class UserInfoControllerTest {
     @DisplayName("/user/sign-up API 테스트: 회원가입")
     void signUpTest() throws Exception {
 
-        String userJson = objectMapper.writeValueAsString(userInfoRequestDTO);
+        String userJson = objectMapper.writeValueAsString(userInfoSignUpRequestDTO);
 
         mockMvc.perform(post("/user/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +107,7 @@ class UserInfoControllerTest {
     @Test
     @DisplayName("/user/refresh 테스트: 리프레시 토큰을 통한 토큰셋 재발급")
     void refreshTest() throws Exception {
-        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        UserInfoEntity signUp = userInfoService.signUp(userInfoSignUpRequestDTO);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(signUp));
 
         mockMvc.perform(get("/user/refresh")
@@ -123,9 +123,9 @@ class UserInfoControllerTest {
     @Test
     @DisplayName("/user/sign-in test: 로그인")
     void signInTest() throws Exception {
-        userInfoService.signUp(userInfoRequestDTO);
+        userInfoService.signUp(userInfoSignUpRequestDTO);
         // 자격증명을 전달
-        String authorization = Base64.getEncoder().encodeToString((userInfoRequestDTO.email() + ":" + userInfoRequestDTO.password()).getBytes());
+        String authorization = Base64.getEncoder().encodeToString((userInfoSignUpRequestDTO.email() + ":" + userInfoSignUpRequestDTO.password()).getBytes());
         // access token, refresh token을 받아야함.
         mockMvc.perform(get("/user/sign-in")
                         .header(Constant.HEADER_AUTHORIZATION, "Basic " + authorization))
@@ -139,7 +139,7 @@ class UserInfoControllerTest {
     @Test
     @DisplayName("jwtValidationFilter 테스트: 엑세스 토큰을 통한 인증")
     void jwtValidationFilterTest() throws Exception {
-        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        UserInfoEntity signUp = userInfoService.signUp(userInfoSignUpRequestDTO);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(signUp));
 
         mockMvc.perform(get("/user/test")
@@ -153,7 +153,7 @@ class UserInfoControllerTest {
     @Test
     @DisplayName("/user/info 테스트: 엑세스 토큰을 통한 유저정보 반환")
     void userInfoTest() throws Exception {
-        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        UserInfoEntity signUp = userInfoService.signUp(userInfoSignUpRequestDTO);
         Authentication authentication = createAuthentication(signUp);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
@@ -174,7 +174,7 @@ class UserInfoControllerTest {
     @Test
     @DisplayName("/user/pass-id 테스트: 엑세스 토큰을 통한 UserInfoPass 반환")
     void passIdTest() throws Exception {
-        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        UserInfoEntity signUp = userInfoService.signUp(userInfoSignUpRequestDTO);
         Authentication authentication = createAuthentication(signUp);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
@@ -190,7 +190,7 @@ class UserInfoControllerTest {
     @Test
     @DisplayName("/user/pass-info/{id} 테스트: 사용자 id를 통한 UserInfoPass 객체 반환")
     void userInfoPassTest() throws Exception {
-        UserInfoEntity signUp = userInfoService.signUp(userInfoRequestDTO);
+        UserInfoEntity signUp = userInfoService.signUp(userInfoSignUpRequestDTO);
         Authentication authentication = createAuthentication(signUp);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 

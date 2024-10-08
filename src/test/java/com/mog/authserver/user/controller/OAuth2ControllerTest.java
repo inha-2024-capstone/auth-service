@@ -10,7 +10,7 @@ import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.domain.enums.Role;
-import com.mog.authserver.user.dto.UserInfoRequestDTO;
+import com.mog.authserver.user.dto.UserInfoSignUpDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.service.UserInfoService;
 import org.junit.jupiter.api.Assertions;
@@ -60,14 +60,14 @@ class OAuth2ControllerTest {
 
     private MockMvc mockMvc;
 
-    private UserInfoRequestDTO userInfoRequestDTO;
+    private UserInfoSignUpDTO userInfoSignUpRequestDTO;
 
     private UserInfoEntity userInfoEntity;
 
     @BeforeEach
     public void setup() {
         // RequestDTO 생성
-        userInfoRequestDTO = new UserInfoRequestDTO(
+        userInfoSignUpRequestDTO = new UserInfoSignUpDTO(
                 "rlwjddl1596@google.com",
                 "kim",
                 "qwer1234567!",
@@ -111,7 +111,7 @@ class OAuth2ControllerTest {
     }
 
     @Test
-    @DisplayName("POST /oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 수정 후 저장")
+    @DisplayName("PATCH /oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 수정 후 저장")
     public void oAuthSignUpTestPost() throws Exception {
 
         Authentication authentication = createAuthentication(userInfoEntity);
@@ -120,14 +120,14 @@ class OAuth2ControllerTest {
         mockMvc.perform(patch("/oauth/sign-up")
                         .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userInfoRequestDTO)))
+                        .content(objectMapper.writeValueAsString(userInfoSignUpRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSucceeded").value("true"))
                 .andExpect(jsonPath("$.message").value("성공입니다."))
                 .andReturn();
 
-        UserInfoEntity userInfoByEmailAndLoginSource = userInfoService.findUserInfoByEmailAndLoginSource(userInfoRequestDTO.email(), userInfoRequestDTO.loginSource());
-        Assertions.assertEquals(userInfoRequestDTO, UserInfoEntityMapper.toUserInfoRequestDTO(userInfoByEmailAndLoginSource));
+        UserInfoEntity userInfoByEmailAndLoginSource = userInfoService.findUserInfoByEmailAndLoginSource(userInfoSignUpRequestDTO.email(), userInfoSignUpRequestDTO.loginSource());
+        Assertions.assertEquals(userInfoSignUpRequestDTO, UserInfoEntityMapper.toUserInfoRequestDTO(userInfoByEmailAndLoginSource));
 
     }
 

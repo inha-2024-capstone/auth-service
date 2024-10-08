@@ -5,7 +5,7 @@ import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
-import com.mog.authserver.user.dto.UserInfoRequestDTO;
+import com.mog.authserver.user.dto.UserInfoModifyDTO;
 import com.mog.authserver.user.dto.UserInfoResponseDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.service.UserInfoService;
@@ -24,7 +24,7 @@ public class OAuth2Controller {
     private final UserInfoService userInfoService;
 
     @GetMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<UserInfoResponseDTO>> getUserInfo(Authentication authentication){
+    public ResponseEntity<BaseResponseBody<UserInfoResponseDTO>> getSignUpInfo(Authentication authentication){
         UserInfoEntity userInfoEntity = userInfoService.findUserInfoById(getIdFromAuthentication(authentication));
         if(userInfoEntity.getLoginSource() == LoginSource.THIS) throw new RuntimeException("해당 사용자는 OAuth2.0 사용자가 아닙니다.");
         return ResponseEntity
@@ -33,8 +33,8 @@ public class OAuth2Controller {
     }
 
     @PatchMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<?>> singUp(@Valid @RequestBody UserInfoRequestDTO userRequestDto, Authentication authentication){
-        userInfoService.modifyUserInfo(userRequestDto, getIdFromAuthentication(authentication));
+    public ResponseEntity<BaseResponseBody<?>> signUp(@Valid @RequestBody UserInfoModifyDTO userInfoModifyDTO, Authentication authentication){
+        userInfoService.modifyUserInfo(userInfoModifyDTO, getIdFromAuthentication(authentication));
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 

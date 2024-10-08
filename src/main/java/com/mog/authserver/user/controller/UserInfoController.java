@@ -7,7 +7,7 @@ import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
-import com.mog.authserver.user.dto.UserInfoRequestDTO;
+import com.mog.authserver.user.dto.UserInfoSignUpDTO;
 import com.mog.authserver.user.dto.UserInfoResponseDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.pass.UserInfoPass;
@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,8 +30,8 @@ public class UserInfoController {
     private final JwtService jwtService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<Void>> signUp(@Valid @RequestBody UserInfoRequestDTO userInfoRequestDTO){
-        userInfoService.signUp(userInfoRequestDTO);
+    public ResponseEntity<BaseResponseBody<Void>> signUp(@Valid @RequestBody UserInfoSignUpDTO userInfoSignUpRequestDTO){
+        userInfoService.signUp(userInfoSignUpRequestDTO);
         return ResponseEntity
                 .status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody());
@@ -59,8 +60,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<BaseResponseBody<UserInfoResponseDTO>> getUserInfo(Authentication authentication){
-        AuthenticatedUserInfo authenticatedUserInfo = (AuthenticatedUserInfo) authentication.getPrincipal();
+    public ResponseEntity<BaseResponseBody<UserInfoResponseDTO>> getUserInfo(@AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo){
         UserInfoEntity userInfoEntity = userInfoService.findUserInfoById(authenticatedUserInfo.id());
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody(UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity)));
