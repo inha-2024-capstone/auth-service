@@ -9,6 +9,10 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Component
 public class HttpCookieOAuth2AuthorizationRequestRepository
@@ -55,6 +59,20 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
                     mode,
                     COOKIE_EXPIRE_SECONDS);
         }
+        Collection<String> headers = response.getHeaders("Set-Cookie");
+        List<String> modifiedHeaders = new ArrayList<>();
+/*
+        for (String header : headers) {
+            // 각 헤더에 SameSite=None 추가
+            header = header + "; SameSite=None";
+            modifiedHeaders.add(header);
+        }
+
+        // 기존 Set-Cookie 헤더를 모두 제거하고 수정된 헤더로 대체합니다.
+        response.setHeader("Set-Cookie", null);
+        for (String header : modifiedHeaders) {
+            response.addHeader("Set-Cookie", header);
+        }*/
     }
 
     @Override
