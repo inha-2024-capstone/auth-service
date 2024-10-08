@@ -14,11 +14,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Slf4j
 public class JwtValidationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
+
+    private String[] swagger = {
+            "/v3/api-docs",
+            "/swagger-ui",
+            "/favicon.ico"
+    };
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,6 +48,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.equals("/user/sign-up") || path.equals("/user/sign-in") || path.equals("/user/refresh");
+        return path.equals("/user/sign-up") || path.equals("/user/sign-in") || path.equals("/user/refresh")
+                || Arrays.stream(swagger).anyMatch(path::startsWith);
     }
 }

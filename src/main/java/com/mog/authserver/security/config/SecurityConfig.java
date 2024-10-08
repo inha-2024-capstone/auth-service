@@ -29,6 +29,13 @@ public class SecurityConfig {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
+
+    private String[] swagger = {
+            "/v3/*",
+            "/v3/api-docs/*",
+            "/swagger-ui/*",
+            "/favicon.ico"
+    };
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
@@ -48,6 +55,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
                         .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
+                        .requestMatchers(swagger).permitAll()
                         .requestMatchers("/user/sign-in", "/user/test", "/user/info", "/user/pass-id"
                         , "/user/pass-info/{id}", "/oauth/sign-up").authenticated())
                 .oauth2Login(configure ->
