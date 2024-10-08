@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 @Component
 public class NaverOAuth2UserUnlink implements OAuth2UserUnlink {
 
-    @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
+    @Value("${unlink.naver}")
     private String URL;
 
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")

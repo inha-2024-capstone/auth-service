@@ -6,11 +6,12 @@ import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.domain.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_table")
@@ -52,4 +53,17 @@ public class UserInfoEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private LoginSource loginSource;
 
+    public UserInfoEntity(Long id, LocalDateTime createTime, LocalDateTime modifiedTime, LocalDateTime deletedTime, State state, String email, String username, String password, Role role, Gender gender, String phoneNumber, String address, String nickName, String imageUrl, LoginSource loginSource) {
+        super(id, createTime, modifiedTime, deletedTime, state);
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.nickName = nickName;
+        this.imageUrl = imageUrl;
+        this.loginSource = loginSource;
+    }
 }

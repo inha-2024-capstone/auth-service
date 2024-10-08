@@ -102,8 +102,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 String accessToken = principal.getUserInfo().getAccessToken();
                 OAuth2Provider provider = principal.getUserInfo().getProvider();
 
-                // TODO: DB 삭제
-                // TODO: 리프레시 토큰 삭제
                 oAuth2UserUnlinkManager.unlink(provider, accessToken, oAuth2UserInfo);
 
                 return UriComponentsBuilder.fromUriString(targetUrl)

@@ -6,7 +6,6 @@ spring:
   config:
     import: "application-oauth.yml"
 
-
   jpa: # jpa settings
     hibernate:
       ddl-auto: none
@@ -18,4 +17,11 @@ jwt:
   time:
     accessTokenExpireTime: 5
     refreshTokenExpireTime: 30
-
+logging:
+  level:
+    web: debug
+    org:
+      springframework:
+        security:
+          web:
+            FilterChainProxy: DEBUG
