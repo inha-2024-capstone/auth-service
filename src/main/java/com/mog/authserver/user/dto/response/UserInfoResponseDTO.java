@@ -1,10 +1,7 @@
-package com.mog.authserver.user.dto;
+package com.mog.authserver.user.dto.response;
 
 import com.mog.authserver.user.domain.enums.Gender;
-import com.mog.authserver.user.domain.enums.LoginSource;
-import com.mog.authserver.user.domain.enums.Role;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public record UserInfoResponseDTO(
         @NotBlank
@@ -13,17 +10,14 @@ public record UserInfoResponseDTO(
         @NotBlank
         String username,
 
-        Role role,
-
         Gender gender,
 
         String phoneNumber,
 
         String address,
 
-        String nickName,
+        String imageUri,
 
-        @NotNull
-        LoginSource loginSource){
+        String nickName){
 }
 

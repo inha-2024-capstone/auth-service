@@ -28,7 +28,7 @@ public class SecurityConfig {
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final CorsConfigurationSource corsConfigurationSource;
 
-    private String[] swagger = {
+    private final String[] swagger = {
             "/v3/*",
             "/v3/api-docs/*",
             "/swagger-ui/*",
@@ -44,10 +44,10 @@ public class SecurityConfig {
                 .addFilterAfter(new JwtGenerationFilter(jwtService), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/user/sign-up", "/user/refresh").permitAll()
+                        .requestMatchers("/api/user/sign-up", "/api/user/refresh").permitAll()
                         .requestMatchers(swagger).permitAll()
-                        .requestMatchers("/user/sign-in", "/user/test", "/user/info", "/user/pass-id"
-                        , "/user/pass-info/{id}", "/oauth/sign-up").authenticated())
+                        .requestMatchers("/api/user/sign-in", "/api/user/test", "/api/user/info", "/api/user/pass-id"
+                        , "/api/user/pass-info/{id}", "/api/oauth/sign-up").authenticated())
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
                                 .userInfoEndpoint(config -> config.userService(customOAuth2UserService))

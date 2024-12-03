@@ -19,10 +19,11 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication != null){
+        if (authentication != null) {
             JwtToken jwtToken = jwtService.generateTokenSet(authentication);
             response.setHeader(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());
             response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
@@ -31,7 +32,7 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getRequestURI().equals("/user/sign-in");
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return !request.getRequestURI().equals("/api/user/sign-in");
     }
 }

@@ -12,7 +12,7 @@ class CookieUtilsTest {
     @Test
     @DisplayName("쿠키 추가 테스트")
     void 쿠키_추가_테스트(){
-        //when
+        //given
         MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
         CookieUtils.addCookie(mockHttpServletResponse,
                 "temp",

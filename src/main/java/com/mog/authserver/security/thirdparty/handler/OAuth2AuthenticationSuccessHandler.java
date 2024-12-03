@@ -3,21 +3,22 @@ package com.mog.authserver.security.thirdparty.handler;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
-import com.mog.authserver.security.mapper.UserInfoMapper;
 import com.mog.authserver.security.thirdparty.requestrepository.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.mog.authserver.security.thirdparty.service.OAuth2Service;
 import com.mog.authserver.security.thirdparty.unlink.OAuth2UserUnlinkManager;
 import com.mog.authserver.security.thirdparty.user.OAuth2Provider;
 import com.mog.authserver.security.thirdparty.user.OAuth2UserInfo;
 import com.mog.authserver.security.thirdparty.user.OAuth2UserPrincipal;
 import com.mog.authserver.security.thirdparty.util.CookieUtils;
+import com.mog.authserver.security.thirdparty.vo.UserJwtInfo;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
-import com.mog.authserver.user.domain.UserInfoEntity;
-import com.mog.authserver.user.domain.enums.Role;
-import com.mog.authserver.user.exception.UserNotFoundException;
-import com.mog.authserver.user.service.UserInfoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,11 +29,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -40,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
-    private final UserInfoService userInfoService;
+    private final OAuth2Service oAuth2Service;
     private final JwtService jwtService;
 
     @Override
@@ -64,39 +60,26 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = resolveTargetURI(request);
         String mode = resolveMode(request);
         OAuth2UserPrincipal principal = getOAuth2UserPrincipal(authentication);
-        // 실패
+
         if (principal != null) {
             OAuth2UserInfo oAuth2UserInfo = principal.getUserInfo();
-            if ("login".equalsIgnoreCase(mode)) {
+            if (mode.equalsIgnoreCase("login")) {
 
-                log.info("oauth login succeeded with email={}, provider={}",
-                        oAuth2UserInfo.getEmail(),
-                        oAuth2UserInfo.getProvider()
-                );
+                log.info("oauth login succeeded with email={}, provider={}", oAuth2UserInfo.getEmail(),
+                        oAuth2UserInfo.getProvider());
 
-                UserInfoEntity userInfoEntity;
-                boolean isSignedUp;
-                try{
-                    userInfoEntity = userInfoService.findUserInfoByEmailAndLoginSource
-                            (oAuth2UserInfo.getEmail(), UserInfoMapper.getLoginSource(oAuth2UserInfo));
-                    isSignedUp = false;
-                }
-                catch (UserNotFoundException userNotFoundException){
-                    UserInfoEntity convertedUserInfoEntity = UserInfoMapper.toUserInfoEntity(oAuth2UserInfo);
-                    userInfoEntity = userInfoService.saveUserInfo(convertedUserInfoEntity);
-                    isSignedUp = true;
-                }
+                boolean isSignedUp = oAuth2Service.hasSignedIn(oAuth2UserInfo);
+                UserJwtInfo userJwtInfo = oAuth2Service.signIn(oAuth2UserInfo);
 
-                // Authority 객체 생성 후 넘겨줘야 함.
-                Authentication usernamePasswordAuthenticationToken = getUsernamePasswordAuthenticationToken(userInfoEntity);
+                Authentication usernamePasswordAuthenticationToken = getUsernamePasswordAuthenticationToken(
+                        userJwtInfo);
 
                 JwtToken jwtToken = jwtService.generateTokenSet(usernamePasswordAuthenticationToken);
 
                 return UriComponentsBuilder.fromUriString(targetUrl)
                         .queryParam(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken()) // Test
                         .queryParam(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken())
-                        .queryParam("sign-up", String.valueOf(isSignedUp))
-                        .build().toUriString();
+                        .queryParam("sign-up", String.valueOf(isSignedUp)).build().toUriString();
             } else if (mode.equalsIgnoreCase("unlink")) {
 
                 String accessToken = principal.getUserInfo().getAccessToken();
@@ -104,36 +87,29 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
                 oAuth2UserUnlinkManager.unlink(provider, accessToken, oAuth2UserInfo);
 
-                return UriComponentsBuilder.fromUriString(targetUrl)
-                        .build().toUriString();
+                return UriComponentsBuilder.fromUriString(targetUrl).build().toUriString();
             }
         }
-        return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("error", "Login failed")
-                .build().toUriString();
+        // 실패
+        return UriComponentsBuilder.fromUriString(targetUrl).queryParam("error", "Login failed").build().toUriString();
     }
 
-    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(UserInfoEntity userInfoEntity) {
+    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(UserJwtInfo userJwtInfo) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(Role.USER.name()));
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(new AuthenticatedUserInfo(
-                        userInfoEntity.getId(),
-                        userInfoEntity.getEmail(),
-                        authorities), "", authorities);
-        return usernamePasswordAuthenticationToken;
+        authorities.add(new SimpleGrantedAuthority(userJwtInfo.role().name()));
+        return new UsernamePasswordAuthenticationToken(
+                new AuthenticatedUserInfo(userJwtInfo.id(), userJwtInfo.email(), authorities), "", authorities);
     }
 
-    private String resolveMode(HttpServletRequest request){
+    private String resolveMode(HttpServletRequest request) {
         return CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.MODE_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue)
-                .orElse("");
+                .map(Cookie::getValue).orElse("");
     }
 
 
-    private String resolveTargetURI(HttpServletRequest request){
-        Optional<String> redirectUri = CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue);
+    private String resolveTargetURI(HttpServletRequest request) {
+        Optional<String> redirectUri = CookieUtils.getCookie(request,
+                HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
 
         return redirectUri.orElse(getDefaultTargetUrl());
     }
@@ -151,5 +127,4 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
-
 }
