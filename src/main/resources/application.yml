@@ -2,9 +2,7 @@ spring:
   application:
     name: authserver
   profiles:
-    default: dev
-  config:
-    import: "application-oauth.yml"
+    default: ${ACTIVE_PROFILE}
 
   jpa: # jpa settings
     hibernate:
