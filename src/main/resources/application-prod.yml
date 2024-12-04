@@ -2,9 +2,9 @@ spring:
   application:
     name: authserver
   datasource: # mysql
-    url: jdbc:mysql://${DB_USERNAME}:${DB_PASSWORD}/yoger-db
-    username: root
-    password: 12345
+    url: jdbc:mysql://${DB_USERNAME}:${DB_PASSWORD}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 jwt:
-  secret: ${JWT-SECRET}
+  secret: ${JWT_SECRET}
