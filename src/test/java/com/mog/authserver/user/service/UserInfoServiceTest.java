@@ -2,7 +2,6 @@ package com.mog.authserver.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mog.authserver.common.TestContainer;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
 import com.mog.authserver.user.domain.enums.LoginSource;
@@ -20,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class UserInfoServiceTest extends TestContainer {
+class UserInfoServiceTest {
 
     @Autowired
     private UserInfoService userInfoService;

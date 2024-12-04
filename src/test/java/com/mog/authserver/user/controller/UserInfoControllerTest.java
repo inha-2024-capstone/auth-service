@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mog.authserver.common.TestContainer;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.jwt.JwtToken;
@@ -53,7 +52,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest  // 모든 빈을 로드
 @AutoConfigureMockMvc
 @Transactional
-class UserInfoControllerTest extends TestContainer {
+class UserInfoControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -75,10 +74,7 @@ class UserInfoControllerTest extends TestContainer {
     @BeforeEach
     public void setup() {
         // security 적용
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
 
     @ParameterizedTest
@@ -88,22 +84,15 @@ class UserInfoControllerTest extends TestContainer {
 
         String userJson = objectMapper.writeValueAsString(signUpRequestDTO);
 
-        mockMvc.perform(post("/api/user/sign-up")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(userJson)
-                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isSucceeded").value("true"))
-                .andExpect(jsonPath("$.message").value("성공입니다."));
+        mockMvc.perform(post("/api/user/sign-up").contentType(MediaType.APPLICATION_JSON).content(userJson)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSucceeded").value("true")).andExpect(jsonPath("$.message").value("성공입니다."));
     }
 
     private static Stream<Arguments> signUpParams() {
-        return Stream.of(
-                Arguments.of(
-                        new SignUpRequestDTO("example@example.com", "홍길동", "qwer123456!", Role.USER, Gender.MALE,
-                                "010-1234-5678", "서울 광역시", "nickname", LoginSource.THIS)
-                )
-        );
+        return Stream.of(Arguments.of(
+                new SignUpRequestDTO("example@example.com", "홍길동", "qwer123456!", Role.USER, Gender.MALE,
+                        "010-1234-5678", "서울 광역시", "nickname", LoginSource.THIS)));
     }
 
     @ParameterizedTest
@@ -113,10 +102,8 @@ class UserInfoControllerTest extends TestContainer {
         UserInfoEntity saved = userInfoPersistService.save(userInfoEntity);
         JwtToken jwtToken = jwtService.generateTokenSet(createAuthentication(saved));
 
-        mockMvc.perform(get("/api/user/refresh")
-                        .header(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isSucceeded").value("true"))
+        mockMvc.perform(get("/api/user/refresh").header(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken()))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.isSucceeded").value("true"))
                 .andExpect(jsonPath("$.message").value("성공입니다."))
                 .andExpect(header().exists(Constant.HEADER_ACCESS_TOKEN))
                 .andExpect(header().exists(Constant.HEADER_REFRESH_TOKEN));
@@ -124,12 +111,9 @@ class UserInfoControllerTest extends TestContainer {
     }
 
     private static Stream<Arguments> saveUserInfoEntity() {
-        return Stream.of(
-                Arguments.of(
-                        new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null,
-                                null, null, null, "http://localhost:2020", LoginSource.THIS)
-                )
-        );
+        return Stream.of(Arguments.of(
+                new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null, null, null, null,
+                        "http://localhost:2020", LoginSource.THIS)));
     }
 
     @ParameterizedTest
@@ -141,10 +125,8 @@ class UserInfoControllerTest extends TestContainer {
         String authorization = Base64.getEncoder()
                 .encodeToString((signUpRequestDTO.email() + ":" + signUpRequestDTO.password()).getBytes());
         // access token, refresh token을 받아야함.
-        mockMvc.perform(get("/api/user/sign-in")
-                        .header(Constant.HEADER_AUTHORIZATION, "Basic " + authorization))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isSucceeded").value("true"))
+        mockMvc.perform(get("/api/user/sign-in").header(Constant.HEADER_AUTHORIZATION, "Basic " + authorization))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.isSucceeded").value("true"))
                 .andExpect(jsonPath("$.message").value("성공입니다."))
                 .andExpect(header().exists(Constant.HEADER_ACCESS_TOKEN))
                 .andExpect(header().exists(Constant.HEADER_REFRESH_TOKEN));
@@ -158,17 +140,15 @@ class UserInfoControllerTest extends TestContainer {
         Authentication authentication = createAuthentication(save);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/user/info")
-                        .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isSucceeded").value("true"))
-                .andExpect(jsonPath("$.message").value("성공입니다."))
-                .andReturn();
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/api/user/info").header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.isSucceeded").value("true"))
+                .andExpect(jsonPath("$.message").value("성공입니다.")).andReturn();
 
         String contentAsString = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
         UserInfoResponseDTO userInfoResponseDTO = UserInfoEntityMapper.toUserInfoResponseDTO(save);
-        String responseDtoToJson = objectMapper.writeValueAsString(SuccessStatus.OK.getBaseResponseBody(
-                userInfoResponseDTO));
+        String responseDtoToJson = objectMapper.writeValueAsString(
+                SuccessStatus.OK.getBaseResponseBody(userInfoResponseDTO));
         Assertions.assertEquals(contentAsString, responseDtoToJson);
 
     }
@@ -181,12 +161,11 @@ class UserInfoControllerTest extends TestContainer {
         Authentication authentication = createAuthentication(save);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
-        mockMvc.perform(get("/api/user/pass-id")
-                        .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
+        mockMvc.perform(
+                        get("/api/user/pass-id").header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(header().string(Constant.HEADER_USER_ID, String.valueOf(save.getId())))
-                .andExpect(jsonPath("$.isSucceeded").value("true"))
-                .andExpect(jsonPath("$.message").value("성공입니다."));
+                .andExpect(jsonPath("$.isSucceeded").value("true")).andExpect(jsonPath("$.message").value("성공입니다."));
 
     }
 
@@ -201,11 +180,10 @@ class UserInfoControllerTest extends TestContainer {
         UserInfoPass userInfoPass = UserInfoEntityMapper.toUserInfoPass(save);
         String passToJson = objectMapper.writeValueAsString(SuccessStatus.OK.getBaseResponseBody(userInfoPass));
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/user/pass-info/" + save.getId())
-                        .header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isSucceeded").value("true"))
-                .andExpect(jsonPath("$.message").value("성공입니다."))
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/api/user/pass-info/" + save.getId()).header(Constant.HEADER_AUTHORIZATION,
+                                "Bearer " + jwtToken.getAccessToken())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSucceeded").value("true")).andExpect(jsonPath("$.message").value("성공입니다."))
                 .andReturn();
 
         Assertions.assertEquals(passToJson, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));

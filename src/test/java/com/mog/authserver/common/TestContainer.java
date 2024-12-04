@@ -1,7 +1,6 @@
 package com.mog.authserver.common;
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
@@ -10,7 +9,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-@ActiveProfiles("test")
 public abstract class TestContainer {
 
     @Container

@@ -1,6 +1,5 @@
 package com.mog.authserver.jwt.util;
 
-import com.mog.authserver.common.TestContainer;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @SpringBootTest
-class JwtUtilTest extends TestContainer {
+class JwtUtilTest {
 
     @Autowired
     private JwtUtil jwtUtil;

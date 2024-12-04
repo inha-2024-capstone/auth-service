@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mog.authserver.common.TestContainer;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.jwt.JwtToken;
@@ -48,7 +47,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class OAuth2ControllerTest extends TestContainer {
+class OAuth2ControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -71,14 +70,12 @@ class OAuth2ControllerTest extends TestContainer {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
 
-    private static Stream<Arguments> signUpDTOParams(){
-        return Stream.of(
-                Arguments.of(
-                        new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null,
-                                null, null, null, "http://localhost:2020", LoginSource.GOOGLE)
-                )
-        );
+    private static Stream<Arguments> signUpDTOParams() {
+        return Stream.of(Arguments.of(
+                new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null, null, null, null,
+                        "http://localhost:2020", LoginSource.GOOGLE)));
     }
+
     @ParameterizedTest
     @MethodSource("signUpDTOParams")
     @DisplayName("GET /oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 가져옴")
@@ -103,12 +100,14 @@ class OAuth2ControllerTest extends TestContainer {
     @ParameterizedTest
     @MethodSource("oauthSignupParams")
     @DisplayName("PATCH /oauth/sign-up 테스트: 회원가입을 위한 OAuth2.0 사용자의 회원정보를 수정 후 저장")
-    public void oAuthSignUpTestPost(UserInfoEntity userInfoEntity, OauthSignUpRequestDTO oauthSignUpRequestDTO) throws Exception {
+    public void oAuthSignUpTestPost(UserInfoEntity userInfoEntity, OauthSignUpRequestDTO oauthSignUpRequestDTO)
+            throws Exception {
         UserInfoEntity save = userInfoPersistService.save(userInfoEntity);
         Authentication authentication = createAuthentication(userInfoEntity);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
-        mockMvc.perform(patch("/api/oauth/sign-up").header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken())
+        mockMvc.perform(
+                        patch("/api/oauth/sign-up").header(Constant.HEADER_AUTHORIZATION, "Bearer " + jwtToken.getAccessToken())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(oauthSignUpRequestDTO))).andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSucceeded").value("true")).andExpect(jsonPath("$.message").value("성공입니다."))
@@ -123,10 +122,10 @@ class OAuth2ControllerTest extends TestContainer {
 
     private static Stream<Arguments> oauthSignupParams() {
         return Stream.of(Arguments.of(
-                new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null,
-                        null, null, null, "http://localhost:2020", LoginSource.GOOGLE),
-                new OauthSignUpRequestDTO(Gender.MALE, "010-1234-5678",
-                        "인천 광역시", "http://localhost:2020", "nickname")));
+                new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null, null, null, null,
+                        "http://localhost:2020", LoginSource.GOOGLE),
+                new OauthSignUpRequestDTO(Gender.MALE, "010-1234-5678", "인천 광역시", "http://localhost:2020",
+                        "nickname")));
     }
 
 
