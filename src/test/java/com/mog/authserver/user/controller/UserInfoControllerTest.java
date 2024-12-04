@@ -89,15 +89,15 @@ class UserInfoControllerTest extends TestContainer {
         String userJson = objectMapper.writeValueAsString(signUpRequestDTO);
 
         mockMvc.perform(post("/api/user/sign-up")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userJson)
-                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSucceeded").value("true"))
                 .andExpect(jsonPath("$.message").value("성공입니다."));
     }
 
-    private static Stream<Arguments> signUpParams(){
+    private static Stream<Arguments> signUpParams() {
         return Stream.of(
                 Arguments.of(
                         new SignUpRequestDTO("example@example.com", "홍길동", "qwer123456!", Role.USER, Gender.MALE,
@@ -123,7 +123,7 @@ class UserInfoControllerTest extends TestContainer {
 
     }
 
-    private static Stream<Arguments> saveUserInfoEntity(){
+    private static Stream<Arguments> saveUserInfoEntity() {
         return Stream.of(
                 Arguments.of(
                         new UserInfoEntity("test@google.com", "홍길동", "qwer1234567!", Role.USER, null,
@@ -138,7 +138,8 @@ class UserInfoControllerTest extends TestContainer {
     void signInTest(SignUpRequestDTO signUpRequestDTO) throws Exception {
         userInfoService.signUp(signUpRequestDTO);
         // 자격증명을 전달
-        String authorization = Base64.getEncoder().encodeToString((signUpRequestDTO.email() + ":" + signUpRequestDTO.password()).getBytes());
+        String authorization = Base64.getEncoder()
+                .encodeToString((signUpRequestDTO.email() + ":" + signUpRequestDTO.password()).getBytes());
         // access token, refresh token을 받아야함.
         mockMvc.perform(get("/api/user/sign-in")
                         .header(Constant.HEADER_AUTHORIZATION, "Basic " + authorization))
@@ -188,6 +189,7 @@ class UserInfoControllerTest extends TestContainer {
                 .andExpect(jsonPath("$.message").value("성공입니다."));
 
     }
+
     @ParameterizedTest
     @MethodSource("saveUserInfoEntity")
     @DisplayName("/user/pass-info/{id} 테스트: 사용자 id를 통한 UserInfoPass 객체 반환")
@@ -210,10 +212,11 @@ class UserInfoControllerTest extends TestContainer {
 
     }
 
-    private Authentication createAuthentication(UserInfoEntity userInfoEntity){
+    private Authentication createAuthentication(UserInfoEntity userInfoEntity) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));
-        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(userInfoEntity.getId(), userInfoEntity.getNickName(), authorities);
+        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(userInfoEntity.getId(),
+                userInfoEntity.getNickName(), authorities);
         return new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
     }
 }

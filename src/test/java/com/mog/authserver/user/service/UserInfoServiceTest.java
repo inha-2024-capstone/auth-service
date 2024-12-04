@@ -67,7 +67,6 @@ class UserInfoServiceTest extends TestContainer {
         return Stream.of(Arguments.of(
                 new SignUpRequestDTO("example@example.com", "홍길동", "qwer123456!", Role.USER, Gender.MALE,
                         "010-1234-5678", "서울 광역시", "nickname", LoginSource.GOOGLE),
-                new OauthSignUpRequestDTO(Gender.MALE, "010-1234-5678", "서울 광역시",
-                          "imageUri", "nickname")));
+                new OauthSignUpRequestDTO(Gender.MALE, "010-1234-5678", "서울 광역시", "imageUri", "nickname")));
     }
 }

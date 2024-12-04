@@ -1,11 +1,11 @@
 package com.mog.authserver.user.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mog.authserver.common.TestContainer;
@@ -21,7 +21,6 @@ import com.mog.authserver.user.domain.enums.Role;
 import com.mog.authserver.user.dto.request.OauthSignUpRequestDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.service.UserInfoPersistService;
-import com.mog.authserver.user.service.UserInfoService;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +55,6 @@ class OAuth2ControllerTest extends TestContainer {
 
     @Autowired
     private JwtService jwtService;
-
-    @Autowired
-    private UserInfoService userInfoService;
 
     @Autowired
     private UserInfoPersistService userInfoPersistService;
