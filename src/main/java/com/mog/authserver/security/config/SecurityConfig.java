@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .addFilterAfter(new JwtGenerationFilter(jwtService), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/api/user/sign-up", "/api/user/refresh").permitAll()
+                        .requestMatchers("/api/user/sign-up", "/api/user/refresh", "/api/health").permitAll()
                         .requestMatchers(swagger).permitAll()
                         .requestMatchers("/api/user/sign-in", "/api/user/test", "/api/user/info", "/api/user/pass-id"
                         , "/api/user/pass-info/{id}", "/api/oauth/sign-up").authenticated())
