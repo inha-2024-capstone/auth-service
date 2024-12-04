@@ -2,5 +2,5 @@ spring:
   application:
     name: authserver
   profiles:
-    active: prod
+    active: ${ACTIVE_PROFILE}
 
