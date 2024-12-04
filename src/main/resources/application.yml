@@ -2,5 +2,4 @@ spring:
   application:
     name: authserver
   profiles:
-    active: ${ACTIVE_PROFILE}
-
+    default: ${ACTIVE_PROFILE}

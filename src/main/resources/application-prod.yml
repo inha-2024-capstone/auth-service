@@ -10,7 +10,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa: # jpa settings
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: false
 
 jwt:
