@@ -2,7 +2,7 @@ spring:
   application:
     name: authserver
   datasource: # mysql
-    url: jdbc:mysql://${DB_USERNAME}:${DB_PASSWORD}/${DB_NAME}
+    url: jdbc:mysql://${DB_URL}:3306/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
