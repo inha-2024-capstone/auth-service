@@ -46,6 +46,6 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.equals("/api/user/sign-up") || path.equals("/api/user/sign-in") || path.equals("/api/user/refresh")
-                || Arrays.stream(swagger).anyMatch(path::startsWith) || path.startsWith("/api/health");
+                || Arrays.stream(swagger).anyMatch(path::startsWith) || path.startsWith("/health");
     }
 }
