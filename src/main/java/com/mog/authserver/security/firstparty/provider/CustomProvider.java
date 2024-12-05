@@ -4,7 +4,7 @@ import com.mog.authserver.security.mapper.UserInfoMapper;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
-import com.mog.authserver.user.service.UserInfoService;
+import com.mog.authserver.user.service.UserInfoPersistService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,14 +19,14 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Slf4j
 public class CustomProvider implements AuthenticationProvider {
-    private UserInfoService userInfoService;
+    private UserInfoPersistService userInfoPersistService;
     private PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
-        UserInfoEntity userInfoEntity = userInfoService.findUserInfoByEmailAndLoginSource(email, LoginSource.THIS);
+        UserInfoEntity userInfoEntity = userInfoPersistService.findByEmailAndLoginSource(email, LoginSource.THIS);
 
         if(passwordEncoder.matches(pwd, userInfoEntity.getPassword())){
             AuthenticatedUserInfo authenticatedUserInfo = UserInfoMapper.toAuthenticatedUserInfo(userInfoEntity);

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: authserver
+  config:
+    import: "application-oauth.yml"
+  datasource: # mysql
+    url: jdbc:mysql://${DB_URL}:3306/${DB_NAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa: # jpa settings
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+
+jwt:
+  secret: ${JWT_SECRET}
+  time:
+    accessTokenExpireTime: 5
+    refreshTokenExpireTime: 30
+
+logging:
+  level:
+    web: info
+    org:
+      springframework:
+        security:
+          web:
+            FilterChainProxy: info
