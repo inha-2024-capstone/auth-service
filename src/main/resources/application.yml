@@ -2,4 +2,26 @@ spring:
   application:
     name: authserver
   profiles:
-    default: ${ACTIVE_PROFILE}
+    default: dev
+  config:
+    import: "application-oauth.yml"
+
+  jpa: # jpa settings
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+jwt:
+  time:
+    accessTokenExpireTime: 5
+    refreshTokenExpireTime: 30
+logging:
+  level:
+    web: debug
+    org:
+      springframework:
+        security:
+          web:
+            FilterChainProxy: DEBUG

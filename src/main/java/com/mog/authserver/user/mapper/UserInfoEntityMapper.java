@@ -1,14 +1,27 @@
 package com.mog.authserver.user.mapper;
 
 import com.mog.authserver.user.domain.UserInfoEntity;
-import com.mog.authserver.user.dto.request.OauthSignUpRequestDTO;
-import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
-import com.mog.authserver.user.dto.request.SignUpRequestDTO;
+import com.mog.authserver.user.dto.UserInfoModifyDTO;
+import com.mog.authserver.user.dto.UserInfoResponseDTO;
+import com.mog.authserver.user.dto.UserInfoSignUpDTO;
 import com.mog.authserver.user.pass.UserInfoPass;
 
 public class UserInfoEntityMapper {
-
-    public static UserInfoEntity toUserInfoEntity(SignUpRequestDTO userInfoSignUpRequestDTO){
+    public static UserInfoEntity toUserInfo(UserInfoResponseDTO userInfoResponseDTO){
+        return new UserInfoEntity(
+                userInfoResponseDTO.email(),
+                userInfoResponseDTO.username(),
+                null,
+                userInfoResponseDTO.role(),
+                userInfoResponseDTO.gender(),
+                userInfoResponseDTO.phoneNumber(),
+                userInfoResponseDTO.address(),
+                userInfoResponseDTO.nickName(),
+                null,
+                userInfoResponseDTO.loginSource()
+        );
+    }
+    public static UserInfoEntity toUserInfo(UserInfoSignUpDTO userInfoSignUpRequestDTO){
         return new UserInfoEntity(
                 userInfoSignUpRequestDTO.email(),
                 userInfoSignUpRequestDTO.username(),
@@ -27,15 +40,30 @@ public class UserInfoEntityMapper {
         return new UserInfoResponseDTO(
                 userInfoEntity.getEmail(),
                 userInfoEntity.getUsername(),
+                userInfoEntity.getRole(),
                 userInfoEntity.getGender(),
                 userInfoEntity.getPhoneNumber(),
                 userInfoEntity.getAddress(),
-                userInfoEntity.getImageUrl(),
-                userInfoEntity.getNickName()
+                userInfoEntity.getNickName(),
+                userInfoEntity.getLoginSource()
         );
     }
 
-    public static UserInfoEntity toUserInfoEntity(UserInfoEntity userInfoEntity, OauthSignUpRequestDTO oauthSignUpRequestDTO){
+    public static UserInfoSignUpDTO toUserInfoRequestDTO(UserInfoEntity userInfoEntity){
+        return new UserInfoSignUpDTO(
+                userInfoEntity.getEmail(),
+                userInfoEntity.getUsername(),
+                userInfoEntity.getPassword(),
+                userInfoEntity.getRole(),
+                userInfoEntity.getGender(),
+                userInfoEntity.getPhoneNumber(),
+                userInfoEntity.getAddress(),
+                userInfoEntity.getNickName(),
+                userInfoEntity.getLoginSource()
+        );
+    }
+
+    public static UserInfoEntity toUserInfoEntity(UserInfoEntity userInfoEntity, UserInfoModifyDTO userInfoModifyDTO){
         return new UserInfoEntity(
                 userInfoEntity.getId(),
                 userInfoEntity.getCreateTime(),
@@ -43,17 +71,32 @@ public class UserInfoEntityMapper {
                 userInfoEntity.getDeletedTime(),
                 userInfoEntity.getState(),
                 userInfoEntity.getEmail(),
-                userInfoEntity.getUsername(),
+                userInfoModifyDTO.username(),
                 userInfoEntity.getPassword(),
+                userInfoModifyDTO.role(),
+                userInfoModifyDTO.gender(),
+                userInfoModifyDTO.phoneNumber(),
+                userInfoModifyDTO.address(),
+                userInfoModifyDTO.nickName(),
+                userInfoModifyDTO.address(),
+                userInfoModifyDTO.loginSource()
+        );
+    }
+
+    public static UserInfoModifyDTO toUserInfoModifyDTO(UserInfoEntity userInfoEntity){
+        return new UserInfoModifyDTO(
+                userInfoEntity.getEmail(),
+                userInfoEntity.getUsername(),
                 userInfoEntity.getRole(),
-                oauthSignUpRequestDTO.gender(),
-                oauthSignUpRequestDTO.phoneNumber(),
-                oauthSignUpRequestDTO.address(),
-                oauthSignUpRequestDTO.nickName(),
-                oauthSignUpRequestDTO.imageUri(),
+                userInfoEntity.getGender(),
+                userInfoEntity.getPhoneNumber(),
+                userInfoEntity.getAddress(),
+                userInfoEntity.getNickName(),
                 userInfoEntity.getLoginSource()
         );
     }
+
+
 
     public static UserInfoPass toUserInfoPass(UserInfoEntity userInfoEntity){
         return new UserInfoPass(
