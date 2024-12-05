@@ -20,7 +20,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
-
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
 
         try {
@@ -34,14 +33,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
-
-        String registrationId = userRequest.getClientRegistration()
-                .getRegistrationId();
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
         String accessToken = userRequest.getAccessToken().getTokenValue();
 
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId,
-                accessToken,
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, accessToken,
                 oAuth2User.getAttributes());
 
         // OAuth2UserInfo field value validation

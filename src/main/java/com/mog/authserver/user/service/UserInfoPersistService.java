@@ -36,4 +36,8 @@ public class UserInfoPersistService {
     public boolean existsByEmailAndLoginSource(String email, LoginSource loginSource) {
         return userInfoRepository.existsByEmailAndLoginSource(email, loginSource);
     }
+
+    public boolean existsByNickname(String nickname) {
+        return userInfoRepository.existsByNickName(nickname);
+    }
 }

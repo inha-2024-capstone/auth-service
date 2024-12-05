@@ -21,36 +21,39 @@ public class UserInfoService {
     private final UserInfoPersistService userInfoPersistService;
 
     @Transactional(readOnly = false)
-    public void signUp(SignUpRequestDTO signUpRequestDTO){
+    public void signUp(SignUpRequestDTO signUpRequestDTO) {
         UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfoEntity(signUpRequestDTO);
         boolean doesUserExist = userInfoPersistService.existsByEmailAndLoginSource(userInfoEntity);
-        if(doesUserExist){
+        if (doesUserExist) {
             throw new UserAlreadyExistException(userInfoEntity.getEmail());
         }
-        userInfoEntity.setPassword(passwordEncoder.encode(userInfoEntity.getPassword()));
-        userInfoPersistService.save(userInfoEntity);
+        UserInfoEntity passwordEncodedEntity = UserInfoEntityMapper.updatePassword(userInfoEntity,
+                passwordEncoder.encode(userInfoEntity.getPassword()));
+        userInfoPersistService.save(passwordEncodedEntity);
     }
 
     @Transactional(readOnly = false)
-    public void oAuthSignUp(OauthSignUpRequestDTO oauthSignUpRequestDTO, Long id){
+    public void oAuthSignUp(OauthSignUpRequestDTO oauthSignUpRequestDTO, Long id) {
         UserInfoEntity userInfoById = userInfoPersistService.findById(id);
-        UserInfoEntity userInfo = UserInfoEntityMapper.toUserInfoEntity(userInfoById, oauthSignUpRequestDTO);
-        userInfoPersistService.save(userInfo);
+        UserInfoEntity updatedUserInfoEntity = UserInfoEntityMapper.updateUserInfoEntity(userInfoById, oauthSignUpRequestDTO);
+        userInfoPersistService.save(updatedUserInfoEntity);
     }
 
     public UserInfoResponseDTO findUserInfoById(Long id) {
         UserInfoEntity userInfoEntity = userInfoPersistService.findById(id);
-        return UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity);
+        return UserInfoResponseDTO.from(userInfoEntity);
     }
 
     public UserInfoPass findUserInfoPass(Long id) {
         UserInfoEntity userInfoEntity = userInfoPersistService.findById(id);
-        return UserInfoEntityMapper.toUserInfoPass(userInfoEntity);
+        return UserInfoPass.from(userInfoEntity);
     }
 
     public UserInfoResponseDTO findOauth2UserInfoById(Long id) {
         UserInfoEntity userInfoEntity = userInfoPersistService.findById(id);
-        if(userInfoEntity.getLoginSource() == LoginSource.THIS) throw new RuntimeException("해당 사용자는 OAuth2.0 사용자가 아닙니다.");
-        return UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity);
+        if (userInfoEntity.getLoginSource() == LoginSource.THIS) {
+            throw new RuntimeException("해당 사용자는 OAuth2.0 사용자가 아닙니다.");
+        }
+        return UserInfoResponseDTO.from(userInfoEntity);
     }
 }

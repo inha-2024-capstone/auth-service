@@ -1,5 +1,6 @@
 package com.mog.authserver.user.dto.response;
 
+import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
 
@@ -19,5 +20,17 @@ public record UserInfoResponseDTO(
         String imageUri,
 
         String nickName){
+
+        public static UserInfoResponseDTO from(UserInfoEntity userInfoEntity){
+                return new UserInfoResponseDTO(
+                        userInfoEntity.getEmail(),
+                        userInfoEntity.getUsername(),
+                        userInfoEntity.getGender(),
+                        userInfoEntity.getPhoneNumber(),
+                        userInfoEntity.getAddress(),
+                        userInfoEntity.getImageUrl(),
+                        userInfoEntity.getNickName()
+                );
+        }
 }
 

@@ -18,7 +18,7 @@ import com.mog.authserver.user.domain.enums.Gender;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.domain.enums.Role;
 import com.mog.authserver.user.dto.request.OauthSignUpRequestDTO;
-import com.mog.authserver.user.mapper.UserInfoEntityMapper;
+import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
 import com.mog.authserver.user.service.UserInfoPersistService;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ class OAuth2ControllerTest {
 
         String contentAsString = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
         String responseJson = objectMapper.writeValueAsString(
-                SuccessStatus.OK.getBaseResponseBody(UserInfoEntityMapper.toUserInfoResponseDTO(userInfoEntity)));
+                SuccessStatus.OK.getBaseResponseBody(UserInfoResponseDTO.from(userInfoEntity)));
         Assertions.assertEquals(responseJson, contentAsString);
     }
 

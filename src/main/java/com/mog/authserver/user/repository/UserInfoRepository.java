@@ -13,6 +13,9 @@ public interface UserInfoRepository extends JpaRepository<UserInfoEntity, Long> 
     @Transactional(readOnly = true)
     Optional<UserInfoEntity> findByEmailAndLoginSource(String email, LoginSource loginSource);
 
+    @Transactional(readOnly = true)
     Boolean existsByEmailAndLoginSource(String email, LoginSource loginSource);
 
+    @Transactional(readOnly = true)
+    Boolean existsByNickName(String nickname);
 }

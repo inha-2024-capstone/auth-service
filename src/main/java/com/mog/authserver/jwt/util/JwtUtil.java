@@ -33,26 +33,21 @@ public class JwtUtil {
     // Member 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public String generateToken(Authentication authentication, Integer minute) {
         // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+        String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        if(!StringUtils.hasText(authorities)){
+        if (!StringUtils.hasText(authorities)) {
             throw new RuntimeException("no authorities are given");
         }
 
-        AuthenticatedUserInfo authenticatedUserInfo = (AuthenticatedUserInfo)authentication.getPrincipal();
+        AuthenticatedUserInfo authenticatedUserInfo = (AuthenticatedUserInfo) authentication.getPrincipal();
 
         long millis = minute.longValue() * 60 * 1000;
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(new Date().getTime() + millis); // 5분
-        return Jwts.builder()
-                .setSubject(String.valueOf(authenticatedUserInfo.id()))
-                .claim("nickName", authenticatedUserInfo.nickName())
-                .claim("authorities", authorities)
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        return Jwts.builder().setSubject(String.valueOf(authenticatedUserInfo.id()))
+                .claim("nickName", authenticatedUserInfo.nickName()).claim("authorities", authorities)
+                .setExpiration(accessTokenExpiresIn).signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
     // Jwt 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
@@ -65,23 +60,20 @@ public class JwtUtil {
         }
 
         // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("authorities").toString().split(","))
-                .map(SimpleGrantedAuthority::new)
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(
+                        claims.get("authorities").toString().split(",")).map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
         // UserDetails 객체를 만들어서 Authentication return
         // UserDetails: interface, User: UserDetails를 구현한 class
-        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(Long.valueOf(claims.getSubject()), claims.get("nickName", String.class), authorities);
+        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(Long.valueOf(claims.getSubject()),
+                claims.get("nickName", String.class), authorities);
         return new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
     }
 
     private Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(accessToken)
-                    .getBody();
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
@@ -90,10 +82,7 @@ public class JwtUtil {
     // 토큰 정보를 검증하는 메서드
     public boolean isTokenValid(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.debug("Invalid JWT Token", e);

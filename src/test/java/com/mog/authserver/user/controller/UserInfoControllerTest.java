@@ -19,7 +19,6 @@ import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.domain.enums.Role;
 import com.mog.authserver.user.dto.request.SignUpRequestDTO;
 import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
-import com.mog.authserver.user.mapper.UserInfoEntityMapper;
 import com.mog.authserver.user.pass.UserInfoPass;
 import com.mog.authserver.user.service.UserInfoPersistService;
 import com.mog.authserver.user.service.UserInfoService;
@@ -146,7 +145,7 @@ class UserInfoControllerTest {
                 .andExpect(jsonPath("$.message").value("성공입니다.")).andReturn();
 
         String contentAsString = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
-        UserInfoResponseDTO userInfoResponseDTO = UserInfoEntityMapper.toUserInfoResponseDTO(save);
+        UserInfoResponseDTO userInfoResponseDTO = UserInfoResponseDTO.from(save);
         String responseDtoToJson = objectMapper.writeValueAsString(
                 SuccessStatus.OK.getBaseResponseBody(userInfoResponseDTO));
         Assertions.assertEquals(contentAsString, responseDtoToJson);
@@ -177,7 +176,7 @@ class UserInfoControllerTest {
         Authentication authentication = createAuthentication(save);
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);
 
-        UserInfoPass userInfoPass = UserInfoEntityMapper.toUserInfoPass(save);
+        UserInfoPass userInfoPass = UserInfoPass.from(save);
         String passToJson = objectMapper.writeValueAsString(SuccessStatus.OK.getBaseResponseBody(userInfoPass));
 
         MvcResult mvcResult = mockMvc.perform(

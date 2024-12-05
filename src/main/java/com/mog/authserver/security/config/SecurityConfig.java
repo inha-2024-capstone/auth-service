@@ -28,28 +28,23 @@ public class SecurityConfig {
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final CorsConfigurationSource corsConfigurationSource;
 
-    private final String[] swagger = {
-            "/v3/*",
-            "/v3/api-docs/*",
-            "/swagger-ui/*",
-            "/favicon.ico"
-    };
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
         http.securityContext((context) -> context
                         .requireExplicitSave(false))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource)).csrf(AbstractHttpConfigurer::disable)
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(
+                        corsConfigurationSource)).csrf(AbstractHttpConfigurer::disable)
                 .addFilterAfter(new JwtGenerationFilter(jwtService), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
-                .authorizeHttpRequests((requests)->requests
-                        .requestMatchers("/api/user/sign-up", "/api/user/refresh", "/health").permitAll()
-                        .requestMatchers(swagger).permitAll()
-                        .requestMatchers("/api/user/sign-in", "/api/user/test", "/api/user/info", "/api/user/pass-id"
-                        , "/api/user/pass-info/{id}", "/api/oauth/sign-up").authenticated())
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(SecurityApiUri.userPermitAll).permitAll()
+                        .requestMatchers(SecurityApiUri.swagger).permitAll()
+                        .requestMatchers(SecurityApiUri.userAuthenticated).authenticated())
                 .oauth2Login(configure ->
-                        configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                        configure.authorizationEndpoint(config -> config.authorizationRequestRepository(
+                                        httpCookieOAuth2AuthorizationRequestRepository))
                                 .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)

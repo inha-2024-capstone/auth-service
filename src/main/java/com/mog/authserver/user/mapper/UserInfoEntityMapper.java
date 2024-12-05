@@ -2,9 +2,7 @@ package com.mog.authserver.user.mapper;
 
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.dto.request.OauthSignUpRequestDTO;
-import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
 import com.mog.authserver.user.dto.request.SignUpRequestDTO;
-import com.mog.authserver.user.pass.UserInfoPass;
 
 public class UserInfoEntityMapper {
 
@@ -23,19 +21,7 @@ public class UserInfoEntityMapper {
         );
     }
 
-    public static UserInfoResponseDTO toUserInfoResponseDTO(UserInfoEntity userInfoEntity){
-        return new UserInfoResponseDTO(
-                userInfoEntity.getEmail(),
-                userInfoEntity.getUsername(),
-                userInfoEntity.getGender(),
-                userInfoEntity.getPhoneNumber(),
-                userInfoEntity.getAddress(),
-                userInfoEntity.getImageUrl(),
-                userInfoEntity.getNickName()
-        );
-    }
-
-    public static UserInfoEntity toUserInfoEntity(UserInfoEntity userInfoEntity, OauthSignUpRequestDTO oauthSignUpRequestDTO){
+    public static UserInfoEntity updateUserInfoEntity(UserInfoEntity userInfoEntity, OauthSignUpRequestDTO oauthSignUpRequestDTO){
         return new UserInfoEntity(
                 userInfoEntity.getId(),
                 userInfoEntity.getCreateTime(),
@@ -55,10 +41,16 @@ public class UserInfoEntityMapper {
         );
     }
 
-    public static UserInfoPass toUserInfoPass(UserInfoEntity userInfoEntity){
-        return new UserInfoPass(
+    public static UserInfoEntity updatePassword(UserInfoEntity userInfoEntity, String encodedPassword){
+        return new UserInfoEntity(
+                userInfoEntity.getId(),
+                userInfoEntity.getCreateTime(),
+                userInfoEntity.getModifiedTime(),
+                userInfoEntity.getDeletedTime(),
+                userInfoEntity.getState(),
                 userInfoEntity.getEmail(),
                 userInfoEntity.getUsername(),
+                encodedPassword,
                 userInfoEntity.getRole(),
                 userInfoEntity.getGender(),
                 userInfoEntity.getPhoneNumber(),

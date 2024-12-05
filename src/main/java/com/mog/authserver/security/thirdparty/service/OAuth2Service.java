@@ -27,8 +27,7 @@ public class OAuth2Service {
 
     public UserJwtInfo signIn(OAuth2UserInfo oAuth2UserInfo) {
         if (hasSignedIn(oAuth2UserInfo)) {
-            UserInfoEntity userInfoEntity = userInfoPersistService.findByEmailAndLoginSource(
-                    oAuth2UserInfo.getEmail(),
+            UserInfoEntity userInfoEntity = userInfoPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
                     getLoginSource(oAuth2UserInfo));
             return UserJwtInfo.from(userInfoEntity);
         }

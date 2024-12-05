@@ -6,4 +6,5 @@ public class Constant {
     public final static String HEADER_ACCESS_TOKEN = "access-token";
     public final static String HEADER_REFRESH_TOKEN = "refresh-token";
     public final static String HEADER_USER_ID = "User-Id";
+    public final static String HEADER_COMPANY_ID = "Company-Id";
 }

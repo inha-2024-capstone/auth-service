@@ -9,10 +9,6 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 @RequiredArgsConstructor
 @Component
 public class HttpCookieOAuth2AuthorizationRequestRepository
@@ -59,8 +55,6 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
                     mode,
                     COOKIE_EXPIRE_SECONDS);
         }
-        Collection<String> headers = response.getHeaders("Set-Cookie");
-        List<String> modifiedHeaders = new ArrayList<>();
     }
 
     @Override
