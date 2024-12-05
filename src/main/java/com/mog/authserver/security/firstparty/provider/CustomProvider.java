@@ -4,8 +4,8 @@ import com.mog.authserver.security.mapper.UserInfoMapper;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
-import com.mog.authserver.user.service.UserInfoService;
-import lombok.AllArgsConstructor;
+import com.mog.authserver.user.service.UserInfoPersistService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,25 +16,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class CustomProvider implements AuthenticationProvider {
-    private UserInfoService userInfoService;
-    private PasswordEncoder passwordEncoder;
+    private final UserInfoPersistService userInfoPersistService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
-        UserInfoEntity userInfoEntity = userInfoService.findUserInfoByEmailAndLoginSource(email, LoginSource.THIS);
+        UserInfoEntity userInfoEntity = userInfoPersistService.findByEmailAndLoginSource(email, LoginSource.THIS);
 
-        if(passwordEncoder.matches(pwd, userInfoEntity.getPassword())){
+        if (passwordEncoder.matches(pwd, userInfoEntity.getPassword())) {
             AuthenticatedUserInfo authenticatedUserInfo = UserInfoMapper.toAuthenticatedUserInfo(userInfoEntity);
             log.info("로그인 완료, email={}, loginSource={}", userInfoEntity.getEmail(), userInfoEntity.getLoginSource());
-            return new UsernamePasswordAuthenticationToken(
-                    authenticatedUserInfo, "", authenticatedUserInfo.authorities());
-        }
-        else {
+            return new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "",
+                    authenticatedUserInfo.authorities());
+        } else {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
     }

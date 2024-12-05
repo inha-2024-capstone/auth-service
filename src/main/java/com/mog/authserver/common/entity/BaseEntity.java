@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @CreatedDate
@@ -35,7 +36,6 @@ public class BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private State state = State.ACTIVE;
-
 
     public enum State {
         ACTIVE, INACTIVE

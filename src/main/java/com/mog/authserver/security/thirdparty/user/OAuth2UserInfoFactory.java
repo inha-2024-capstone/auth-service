@@ -6,8 +6,7 @@ import java.util.Map;
 
 public class OAuth2UserInfoFactory {
 
-    public static OAuth2UserInfo getOAuth2UserInfo(String registrationId,
-                                                   String accessToken,
+    public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, String accessToken,
                                                    Map<String, Object> attributes) {
         if (registrationId.equals(OAuth2Provider.GOOGLE.getRegistrationId())) {
             return new GoogleOAuth2UserInfo(accessToken, attributes);

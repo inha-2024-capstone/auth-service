@@ -11,18 +11,16 @@ class CookieUtilsTest {
 
     @Test
     @DisplayName("쿠키 추가 테스트")
-    void 쿠키_추가_테스트(){
-        //when
+    void 쿠키_추가_테스트() {
+        //given
         MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
-        CookieUtils.addCookie(mockHttpServletResponse,
-                "temp",
-                "temp",
-                180);
+        CookieUtils.addCookie(mockHttpServletResponse, "temp", "temp", 180);
         boolean isThereCookie = false;
         //when
-        for(Cookie cookie : mockHttpServletResponse.getCookies()){
-            if(cookie.getName().equals("temp"))
+        for (Cookie cookie : mockHttpServletResponse.getCookies()) {
+            if (cookie.getName().equals("temp")) {
                 isThereCookie = true;
+            }
         }
         //then
         Assertions.assertTrue(isThereCookie);
@@ -30,7 +28,7 @@ class CookieUtilsTest {
 
     @Test
     @DisplayName("쿠키 추가 테스트")
-    void 쿠키_삭제_테스트(){
+    void 쿠키_삭제_테스트() {
         //given
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         Cookie newCookie = new Cookie("temp", "temp");
@@ -44,8 +42,8 @@ class CookieUtilsTest {
         //when
         CookieUtils.deleteCookie(mockHttpServletRequest, mockHttpServletResponse, "temp");
         boolean isExpired = false;
-        for(Cookie cookie : mockHttpServletResponse.getCookies()){
-            if(cookie.getName().equals("temp")){
+        for (Cookie cookie : mockHttpServletResponse.getCookies()) {
+            if (cookie.getName().equals("temp")) {
                 isExpired = (cookie.getMaxAge() == 0);
             }
         }
@@ -55,7 +53,7 @@ class CookieUtilsTest {
 
     @Test
     @DisplayName("직렬화 테스트")
-    void 직렬화_테스트(){
+    void 직렬화_테스트() {
         //given
         String nonSerialized = "HI";
         //when
@@ -66,7 +64,7 @@ class CookieUtilsTest {
 
     @Test
     @DisplayName("역직렬화 테스트")
-    void 역직렬화_테스트(){
+    void 역직렬화_테스트() {
         //given
         String nonSerialized = "HI";
         String serialize = CookieUtils.serialize(nonSerialized);
