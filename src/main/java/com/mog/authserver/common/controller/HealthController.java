@@ -1,4 +1,4 @@
-package com.mog.authserver.user.controller;
+package com.mog.authserver.common.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -60,4 +60,24 @@ public class UserInfoEntityMapper {
                 userInfoEntity.getLoginSource()
         );
     }
+
+    public static UserInfoEntity updateNickname(UserInfoEntity userInfoEntity, String nickname){
+        return new UserInfoEntity(
+                userInfoEntity.getId(),
+                userInfoEntity.getCreateTime(),
+                userInfoEntity.getModifiedTime(),
+                userInfoEntity.getDeletedTime(),
+                userInfoEntity.getState(),
+                userInfoEntity.getEmail(),
+                userInfoEntity.getUsername(),
+                userInfoEntity.getPassword(),
+                userInfoEntity.getRole(),
+                userInfoEntity.getGender(),
+                userInfoEntity.getPhoneNumber(),
+                userInfoEntity.getAddress(),
+                nickname,
+                userInfoEntity.getImageUrl(),
+                userInfoEntity.getLoginSource()
+        );
+    }
 }

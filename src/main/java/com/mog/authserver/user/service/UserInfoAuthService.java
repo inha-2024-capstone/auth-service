@@ -1,5 +1,7 @@
 package com.mog.authserver.user.service;
 
+import com.mog.authserver.jwt.JwtToken;
+import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.dto.request.OauthSignUpRequestDTO;
@@ -16,17 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserInfoService {
+public class UserInfoAuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserInfoPersistService userInfoPersistService;
+    private final UserInfoValidationService userInfoValidationService;
+    private final JwtService jwtService;
 
     @Transactional(readOnly = false)
     public void signUp(SignUpRequestDTO signUpRequestDTO) {
-        UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfoEntity(signUpRequestDTO);
-        boolean doesUserExist = userInfoPersistService.existsByEmailAndLoginSource(userInfoEntity);
-        if (doesUserExist) {
-            throw new UserAlreadyExistException(userInfoEntity.getEmail());
+        if (userInfoValidationService.validateDuplicateEmail(signUpRequestDTO.email())) {
+            throw new UserAlreadyExistException(signUpRequestDTO.email());
         }
+
+        UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfoEntity(signUpRequestDTO);
         UserInfoEntity passwordEncodedEntity = UserInfoEntityMapper.updatePassword(userInfoEntity,
                 passwordEncoder.encode(userInfoEntity.getPassword()));
         userInfoPersistService.save(passwordEncodedEntity);
@@ -35,8 +39,18 @@ public class UserInfoService {
     @Transactional(readOnly = false)
     public void oAuthSignUp(OauthSignUpRequestDTO oauthSignUpRequestDTO, Long id) {
         UserInfoEntity userInfoById = userInfoPersistService.findById(id);
-        UserInfoEntity updatedUserInfoEntity = UserInfoEntityMapper.updateUserInfoEntity(userInfoById, oauthSignUpRequestDTO);
+        UserInfoEntity updatedUserInfoEntity = UserInfoEntityMapper.updateUserInfoEntity(userInfoById,
+                oauthSignUpRequestDTO);
         userInfoPersistService.save(updatedUserInfoEntity);
+    }
+
+    public void signOut(String refreshToken) {
+        jwtService.storeRefreshToken(refreshToken);
+    }
+
+    public JwtToken refreshAuth(String refreshToken) {
+        jwtService.validateRefreshTokenExistence(refreshToken);
+        return jwtService.reGenerateTokenSet(refreshToken);
     }
 
     public UserInfoResponseDTO findUserInfoById(Long id) {

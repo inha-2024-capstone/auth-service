@@ -6,6 +6,8 @@ import com.mog.authserver.user.exception.UserNotFoundException;
 import com.mog.authserver.user.repository.UserInfoRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 public class UserInfoPersistService {
     private final UserInfoRepository userInfoRepository;
 
+    @Cacheable(cacheNames = "userInfoCache", key = "#id", condition = "#id == null")
     public UserInfoEntity findById(Long id) {
         return userInfoRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found With Given ID"));
     }
 
+    @CachePut(cacheNames = "userInfoCache", key = "#result.id", unless = "#result == null")
     public UserInfoEntity save(UserInfoEntity userInfoEntity) {
         return userInfoRepository.save(userInfoEntity);
     }
@@ -26,11 +30,6 @@ public class UserInfoPersistService {
         Optional<UserInfoEntity> userInfoEntityOptional = userInfoRepository.findByEmailAndLoginSource(email, source);
         return userInfoEntityOptional.orElseThrow(
                 () -> new UserNotFoundException("User Not Found With Given Email and Login source"));
-    }
-
-    public boolean existsByEmailAndLoginSource(UserInfoEntity userInfoEntity) {
-        return userInfoRepository.existsByEmailAndLoginSource(userInfoEntity.getEmail(),
-                userInfoEntity.getLoginSource());
     }
 
     public boolean existsByEmailAndLoginSource(String email, LoginSource loginSource) {

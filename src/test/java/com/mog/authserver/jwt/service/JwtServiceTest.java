@@ -1,7 +1,9 @@
 package com.mog.authserver.jwt.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
+import com.mog.authserver.common.RedisTestContainer;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @SpringBootTest
-class JwtServiceTest {
+class JwtServiceTest extends RedisTestContainer {
 
     @Autowired
     private JwtService jwtService;
@@ -58,5 +60,21 @@ class JwtServiceTest {
         Assertions.assertThat(principal1.id()).isEqualTo(principal2.id());
         Assertions.assertThat(principal1.nickName()).isEqualTo(principal2.nickName());
         assertIterableEquals(principal1.getAuthorities(), principal2.getAuthorities());
+    }
+
+    @Test
+    void 토큰_레디스_저장() {
+        //given
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("USER"));
+        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "kim", authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
+        //when
+        JwtToken jwtToken = jwtService.generateTokenSet(authentication);
+        String refreshToken = jwtToken.getRefreshToken();
+        jwtService.storeRefreshToken(refreshToken);
+        //then
+        assertThatThrownBy(() -> jwtService.validateRefreshTokenExistence(refreshToken)).isInstanceOf(
+                RuntimeException.class);
     }
 }
