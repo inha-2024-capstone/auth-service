@@ -21,7 +21,7 @@ public class RedisConfig {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
         redisConfig.setHostName(redisHost); // 호스트명 설정
         redisConfig.setPort(redisPort); // 포트 설정
-        //redisConfig.setPassword(redisPassword); // 비밀번호 설정 (필요 시)
+        redisConfig.setPassword(redisPassword); // 비밀번호 설정 (필요 시)
 
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisConfig);
         lettuceConnectionFactory.afterPropertiesSet();

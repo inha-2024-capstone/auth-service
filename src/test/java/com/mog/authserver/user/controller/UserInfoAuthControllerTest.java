@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mog.authserver.common.RedisTestContainer;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.jwt.JwtToken;
@@ -21,8 +20,8 @@ import com.mog.authserver.user.domain.enums.Role;
 import com.mog.authserver.user.dto.request.SignUpRequestDTO;
 import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
 import com.mog.authserver.user.pass.UserInfoPass;
-import com.mog.authserver.user.service.UserInfoPersistService;
 import com.mog.authserver.user.service.UserInfoAuthService;
+import com.mog.authserver.user.service.UserInfoPersistService;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -52,7 +51,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest  // 모든 빈을 로드
 @AutoConfigureMockMvc
 @Transactional
-class UserInfoAuthControllerTest extends RedisTestContainer {
+class UserInfoAuthControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
