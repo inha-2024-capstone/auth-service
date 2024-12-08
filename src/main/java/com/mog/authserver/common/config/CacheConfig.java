@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @EnableCaching
 public class CacheConfig {
+
+    @Value("${spring.data.redis.userTTL}")
+    private Integer userTtl;
+    @Value("${spring.data.redis.jwtTTL}")
+    private Integer jwtTtl;
+
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -28,14 +35,14 @@ public class CacheConfig {
 
         // 기본 캐시 설정
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(10)) // 기본 TTL 설정
+                .entryTtl(Duration.ofMinutes(userTtl)) // 기본 TTL 설정
                 .disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jacksonSerializer));
 
         // JWT 캐시 설정 (값을 String으로 직렬화)
         RedisCacheConfiguration jwtCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(30)) // JWT 캐시 TTL 설정
+                .entryTtl(Duration.ofMinutes(jwtTtl)) // JWT 캐시 TTL 설정
                 .disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()));

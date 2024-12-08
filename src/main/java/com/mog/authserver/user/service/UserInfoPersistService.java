@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserInfoPersistService {
     private final UserInfoRepository userInfoRepository;
 
-    @Cacheable(cacheNames = "userInfoCache", key = "#id", condition = "#id == null")
+    @Cacheable(cacheNames = "userInfoCache", key = "#id", condition = "#id != null")
     public UserInfoEntity findById(Long id) {
         return userInfoRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found With Given ID"));

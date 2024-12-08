@@ -27,5 +27,4 @@ public class RedisConfig {
         lettuceConnectionFactory.afterPropertiesSet();
         return lettuceConnectionFactory;
     }
-
 }
