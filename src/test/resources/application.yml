@@ -23,3 +23,10 @@ jwt:
   time:
     accessTokenExpireTime: 5
     refreshTokenExpireTime: 30
+logging:
+  level:
+    web: debug
+    cache: debug
+    data:
+      redis: debug
+

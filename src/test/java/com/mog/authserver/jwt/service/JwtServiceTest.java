@@ -3,7 +3,6 @@ package com.mog.authserver.jwt.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-import com.mog.authserver.common.RedisTestContainer;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @SpringBootTest
-class JwtServiceTest extends RedisTestContainer {
+class JwtServiceTest {
 
     @Autowired
     private JwtService jwtService;
