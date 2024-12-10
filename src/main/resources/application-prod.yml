@@ -27,6 +27,11 @@ jwt:
     accessTokenExpireTime: ${JWT_ACCESS_TIME}
     refreshTokenExpireTime: ${JWT_REFRESH_TIME}
 
+gcp:
+  project-id: ${GCP_PROJECT_ID}
+  bucket-name: ${BUCKET_NAME}
+  credentials: ${SERVICE_CREDENTIALS}
+
 logging:
   level:
     web: info

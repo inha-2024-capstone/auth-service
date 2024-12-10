@@ -74,7 +74,7 @@ class UserInfoAuthControllerTest {
 
     @MockBean
     private Storage storage;
-    
+
     @BeforeEach
     public void setup() {
         // security 적용
@@ -127,7 +127,7 @@ class UserInfoAuthControllerTest {
         userInfoAuthService.signUp(signUpRequestDTO);
         // 자격증명을 전달
         String authorization = Base64.getEncoder()
-                .encodeToString((signUpRequestDTO.email() + ":" + signUpRequestDTO.password()).getBytes());
+                .encodeToString((signUpRequestDTO.email() + "#1:" + signUpRequestDTO.password()).getBytes());
         // access token, refresh token을 받아야함.
         mockMvc.perform(get("/api/user/sign-in").header(Constant.HEADER_AUTHORIZATION, "Basic " + authorization))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.isSucceeded").value("true"))
