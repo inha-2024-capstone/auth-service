@@ -1,0 +1,23 @@
+package com.mog.authserver.company.service;
+
+import com.mog.authserver.company.domain.CompanyEntity;
+import com.mog.authserver.company.dto.response.CompanyInfoResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class CompanyQueryService {
+    private final CompanyPersistService companyPersistService;
+
+    public Page<CompanyInfoResponseDTO> getCompanyInfoPaging(Integer page, Integer size) {
+        Page<CompanyEntity> allWithPaging = companyPersistService.findAllWithPaging(page, size);
+        return allWithPaging.map(CompanyInfoResponseDTO::from);
+    }
+
+    public CompanyInfoResponseDTO getCompanyInfo(Long id) {
+        CompanyEntity companyEntity = companyPersistService.findById(id);
+        return CompanyInfoResponseDTO.from(companyEntity);
+    }
+}
