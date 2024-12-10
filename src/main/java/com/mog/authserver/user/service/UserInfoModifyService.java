@@ -17,7 +17,7 @@ public class UserInfoModifyService {
     private final PasswordEncoder passwordEncoder;
 
     public void modifyPassword(Long id, String password) {
-        if (userInfoValidationService.validateSamePassword(id, password)) {
+        if (userInfoValidationService.isSamePassword(id, password)) {
             throw new RuntimeException("기존의 비밀번호와 일치합니다.");
         }
 

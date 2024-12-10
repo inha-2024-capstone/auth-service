@@ -46,7 +46,7 @@ public class JwtUtil {
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(new Date().getTime() + millis); // 5분
         return Jwts.builder().setSubject(String.valueOf(authenticatedUserInfo.id()))
-                .claim("nickName", authenticatedUserInfo.nickName()).claim("authorities", authorities)
+                .claim("name", authenticatedUserInfo.name()).claim("authorities", authorities)
                 .setExpiration(accessTokenExpiresIn).signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
@@ -67,7 +67,7 @@ public class JwtUtil {
         // UserDetails 객체를 만들어서 Authentication return
         // UserDetails: interface, User: UserDetails를 구현한 class
         AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(Long.valueOf(claims.getSubject()),
-                claims.get("nickName", String.class), authorities);
+                claims.get("name", String.class), authorities);
         return new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
     }
 

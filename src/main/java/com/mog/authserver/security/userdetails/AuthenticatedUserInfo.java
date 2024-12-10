@@ -1,14 +1,12 @@
 package com.mog.authserver.security.userdetails;
 
+import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-
 public record AuthenticatedUserInfo(
         Long id,
-        String nickName,
+        String name,
         Collection<? extends GrantedAuthority> authorities
 ) implements UserDetails {
     @Override

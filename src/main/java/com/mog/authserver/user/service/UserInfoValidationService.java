@@ -12,10 +12,6 @@ public class UserInfoValidationService {
     private final UserInfoPersistService userInfoPersistService;
     private final PasswordEncoder passwordEncoder;
 
-    public Boolean validateDuplicateEmail(String email) {
-        return userInfoPersistService.existsByEmailAndLoginSource(email, LoginSource.THIS);
-    }
-
     public Boolean doesEmailExist(String email) {
         return userInfoPersistService.existsByEmailAndLoginSource(email, LoginSource.THIS);
     }
@@ -24,7 +20,7 @@ public class UserInfoValidationService {
         return userInfoPersistService.existsByNickname(nickname);
     }
 
-    public Boolean validateSamePassword(Long id, String password) {
+    public Boolean isSamePassword(Long id, String password) {
         UserInfoEntity findById = userInfoPersistService.findById(id);
         return passwordEncoder.matches(password, findById.getPassword());
     }

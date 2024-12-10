@@ -26,7 +26,7 @@ public class UserInfoAuthService {
 
     @Transactional(readOnly = false)
     public void signUp(SignUpRequestDTO signUpRequestDTO) {
-        if (userInfoValidationService.validateDuplicateEmail(signUpRequestDTO.email())) {
+        if (userInfoValidationService.doesEmailExist(signUpRequestDTO.email())) {
             throw new UserAlreadyExistException(signUpRequestDTO.email());
         }
 

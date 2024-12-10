@@ -6,22 +6,23 @@ import com.mog.authserver.user.dto.request.SignUpRequestDTO;
 
 public class UserInfoEntityMapper {
 
-    public static UserInfoEntity toUserInfoEntity(SignUpRequestDTO userInfoSignUpRequestDTO){
+    public static UserInfoEntity toUserInfoEntity(SignUpRequestDTO signUpRequestDTO) {
         return new UserInfoEntity(
-                userInfoSignUpRequestDTO.email(),
-                userInfoSignUpRequestDTO.username(),
-                userInfoSignUpRequestDTO.password(),
-                userInfoSignUpRequestDTO.role(),
-                userInfoSignUpRequestDTO.gender(),
-                userInfoSignUpRequestDTO.phoneNumber(),
-                userInfoSignUpRequestDTO.address(),
-                userInfoSignUpRequestDTO.nickName(),
+                signUpRequestDTO.email(),
+                signUpRequestDTO.username(),
+                signUpRequestDTO.password(),
+                signUpRequestDTO.role(),
+                signUpRequestDTO.gender(),
+                signUpRequestDTO.phoneNumber(),
+                signUpRequestDTO.address(),
+                signUpRequestDTO.nickName(),
                 null,
-                userInfoSignUpRequestDTO.loginSource()
+                signUpRequestDTO.loginSource()
         );
     }
 
-    public static UserInfoEntity updateUserInfoEntity(UserInfoEntity userInfoEntity, OauthSignUpRequestDTO oauthSignUpRequestDTO){
+    public static UserInfoEntity updateUserInfoEntity(UserInfoEntity userInfoEntity,
+                                                      OauthSignUpRequestDTO oauthSignUpRequestDTO) {
         return new UserInfoEntity(
                 userInfoEntity.getId(),
                 userInfoEntity.getCreateTime(),
@@ -41,7 +42,7 @@ public class UserInfoEntityMapper {
         );
     }
 
-    public static UserInfoEntity updatePassword(UserInfoEntity userInfoEntity, String encodedPassword){
+    public static UserInfoEntity updatePassword(UserInfoEntity userInfoEntity, String encodedPassword) {
         return new UserInfoEntity(
                 userInfoEntity.getId(),
                 userInfoEntity.getCreateTime(),
@@ -61,7 +62,7 @@ public class UserInfoEntityMapper {
         );
     }
 
-    public static UserInfoEntity updateNickname(UserInfoEntity userInfoEntity, String nickname){
+    public static UserInfoEntity updateNickname(UserInfoEntity userInfoEntity, String nickname) {
         return new UserInfoEntity(
                 userInfoEntity.getId(),
                 userInfoEntity.getCreateTime(),
@@ -77,6 +78,26 @@ public class UserInfoEntityMapper {
                 userInfoEntity.getAddress(),
                 nickname,
                 userInfoEntity.getImageUrl(),
+                userInfoEntity.getLoginSource()
+        );
+    }
+
+    public static UserInfoEntity updateImageUrl(UserInfoEntity userInfoEntity, String imageUrl) {
+        return new UserInfoEntity(
+                userInfoEntity.getId(),
+                userInfoEntity.getCreateTime(),
+                userInfoEntity.getModifiedTime(),
+                userInfoEntity.getDeletedTime(),
+                userInfoEntity.getState(),
+                userInfoEntity.getEmail(),
+                userInfoEntity.getUsername(),
+                userInfoEntity.getPassword(),
+                userInfoEntity.getRole(),
+                userInfoEntity.getGender(),
+                userInfoEntity.getPhoneNumber(),
+                userInfoEntity.getAddress(),
+                userInfoEntity.getNickName(),
+                imageUrl,
                 userInfoEntity.getLoginSource()
         );
     }
