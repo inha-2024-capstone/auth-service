@@ -23,6 +23,12 @@ jwt:
   time:
     accessTokenExpireTime: 5
     refreshTokenExpireTime: 30
+
+gcp:
+  project-id: dummy
+  bucket-name: dummy
+  credentials: dummy
+
 logging:
   level:
     web: debug

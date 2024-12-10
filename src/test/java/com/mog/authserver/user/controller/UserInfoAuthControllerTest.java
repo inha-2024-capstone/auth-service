@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.storage.Storage;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.jwt.JwtToken;
@@ -36,6 +37,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -70,6 +72,9 @@ class UserInfoAuthControllerTest {
 
     private MockMvc mockMvc;
 
+    @MockBean
+    private Storage storage;
+    
     @BeforeEach
     public void setup() {
         // security 적용

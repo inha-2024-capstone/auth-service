@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.cloud.storage.Storage;
 import com.mog.authserver.common.RedisTestContainer;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
@@ -26,6 +27,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,6 +52,9 @@ class UserInfoAuthServiceTest extends RedisTestContainer {
     private CacheManager cacheManager;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @MockBean
+    private Storage storage;
 
     @BeforeEach
     void setUp(){

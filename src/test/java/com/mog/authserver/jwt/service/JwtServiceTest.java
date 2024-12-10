@@ -3,6 +3,7 @@ package com.mog.authserver.jwt.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
+import com.google.cloud.storage.Storage;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +23,9 @@ class JwtServiceTest {
 
     @Autowired
     private JwtService jwtService;
+
+    @MockBean
+    private Storage storage;
 
     @Test
     void 인증객체_반환() {
@@ -35,7 +40,7 @@ class JwtServiceTest {
         AuthenticatedUserInfo principal = (AuthenticatedUserInfo) jwtServiceAuthentication.getPrincipal();
         //then
         Assertions.assertThat(principal.id()).isEqualTo(authenticatedUserInfo.id());
-        Assertions.assertThat(principal.nickName()).isEqualTo(authenticatedUserInfo.nickName());
+        Assertions.assertThat(principal.name()).isEqualTo(authenticatedUserInfo.name());
         assertIterableEquals(authorities, principal.getAuthorities());
     }
 
@@ -57,7 +62,7 @@ class JwtServiceTest {
         AuthenticatedUserInfo principal2 = (AuthenticatedUserInfo) jwtServiceAuthentication2.getPrincipal();
         //then
         Assertions.assertThat(principal1.id()).isEqualTo(principal2.id());
-        Assertions.assertThat(principal1.nickName()).isEqualTo(principal2.nickName());
+        Assertions.assertThat(principal1.name()).isEqualTo(principal2.name());
         assertIterableEquals(principal1.getAuthorities(), principal2.getAuthorities());
     }
 
