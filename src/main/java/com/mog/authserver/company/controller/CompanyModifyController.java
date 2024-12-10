@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,6 +81,13 @@ public class CompanyModifyController {
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @Valid @ModelAttribute ImageModifyRequestDTO imageModifyRequestDTO) {
         companyModifyService.updateProfileImage(authenticatedUserInfo.id(), imageModifyRequestDTO);
+        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<BaseResponseBody<Void>> deleteImage(
+            @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
+        companyModifyService.deleteAndUpdateDefaultImage(authenticatedUserInfo.id());
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 }

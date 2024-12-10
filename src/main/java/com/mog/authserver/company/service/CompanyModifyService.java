@@ -1,5 +1,6 @@
 package com.mog.authserver.company.service;
 
+import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.company.domain.CompanyEntity;
 import com.mog.authserver.company.dto.request.ImageModifyRequestDTO;
 import com.mog.authserver.company.mapper.CompanyMapper;
@@ -41,11 +42,24 @@ public class CompanyModifyService {
 
     public void updateProfileImage(Long id, ImageModifyRequestDTO imageModifyRequestDTO) {
         CompanyEntity companyEntity = companyPersistService.findById(id);
-        if (companyEntity.getImageUrl() != null) {
-            gcsImageService.deleteFile(companyEntity.getImageUrl());
-        }
+        deleteImage(id);
         String imageUrl = gcsImageService.uploadFile(imageModifyRequestDTO.companyImage());
         CompanyEntity descriptionUpdated = CompanyMapper.updateImageUrl(companyEntity, imageUrl);
         companyPersistService.save(descriptionUpdated);
+    }
+
+    public void deleteAndUpdateDefaultImage(Long id) {
+        CompanyEntity companyEntity = companyPersistService.findById(id);
+        deleteImage(id);
+        CompanyEntity descriptionUpdated = CompanyMapper.updateImageUrl(companyEntity, Constant.DEFAULT_COMPANY_IMAGE);
+        companyPersistService.save(descriptionUpdated);
+    }
+
+    private void deleteImage(Long id) {
+        CompanyEntity companyEntity = companyPersistService.findById(id);
+        if (companyEntity.getImageUrl() != null && !companyEntity.getImageUrl()
+                .equals(Constant.DEFAULT_COMPANY_IMAGE)) {
+            gcsImageService.deleteFile(companyEntity.getImageUrl());
+        }
     }
 }
