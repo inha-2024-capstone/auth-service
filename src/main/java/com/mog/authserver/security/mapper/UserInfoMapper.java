@@ -1,5 +1,6 @@
 package com.mog.authserver.security.mapper;
 
+import com.mog.authserver.company.domain.CompanyEntity;
 import com.mog.authserver.security.thirdparty.user.OAuth2UserInfo;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
@@ -17,6 +18,13 @@ public class UserInfoMapper {
         authorities.add(new SimpleGrantedAuthority(userInfoEntity.getRole().name()));
 
         return new AuthenticatedUserInfo(userInfoEntity.getId(), userInfoEntity.getNickName(), authorities);
+    }
+
+    public static AuthenticatedUserInfo toAuthenticatedUserInfo(CompanyEntity company) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(company.getRole().name()));
+
+        return new AuthenticatedUserInfo(company.getId(), company.getCompanyName(), authorities);
     }
 
     public static UserInfoEntity toUserInfoEntity(OAuth2UserInfo oAuth2UserInfo) {

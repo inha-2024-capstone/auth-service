@@ -41,7 +41,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(SecurityApiUri.USER_PERMIT_ALL).permitAll()
                         .requestMatchers(SecurityApiUri.SWAGGER).permitAll()
-                        .requestMatchers(SecurityApiUri.USER_AUTHENTICATED).authenticated())
+                        .requestMatchers(SecurityApiUri.COM_PERMIT_ALL).permitAll()
+                        .requestMatchers(SecurityApiUri.USER_AUTHENTICATED).authenticated()
+                        .requestMatchers(SecurityApiUri.COM_AUTHENTICATED).authenticated()
+                )
+                .formLogin(Customizer.withDefaults())
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(config -> config.authorizationRequestRepository(
                                         httpCookieOAuth2AuthorizationRequestRepository))

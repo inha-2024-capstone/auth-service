@@ -33,6 +33,7 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getRequestURI().equals("/api/user/sign-in");
+        return !request.getRequestURI().equals("/api/user/sign-in") && !request.getRequestURI()
+                .equals("/api/company/sign-in");
     }
 }
