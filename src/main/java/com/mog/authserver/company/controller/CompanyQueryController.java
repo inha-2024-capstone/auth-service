@@ -3,6 +3,7 @@ package com.mog.authserver.company.controller;
 import com.mog.authserver.common.response.BaseResponseBody;
 import com.mog.authserver.common.status.enums.SuccessStatus;
 import com.mog.authserver.company.dto.response.CompanyInfoResponseDTO;
+import com.mog.authserver.company.dto.response.CompanyPassDTO;
 import com.mog.authserver.company.service.CompanyQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,5 +34,13 @@ public class CompanyQueryController {
         CompanyInfoResponseDTO companyInfo = companyQueryService.getCompanyInfo(id);
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
                 .body(SuccessStatus.OK.getBaseResponseBody(companyInfo));
+    }
+
+    @GetMapping("/pass/{id}")
+    public ResponseEntity<BaseResponseBody<CompanyPassDTO>> getCompanyPass(
+            @PathVariable(name = "id") Long id) {
+        CompanyPassDTO companyPass = companyQueryService.getCompanyPass(id);
+        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
+                .body(SuccessStatus.OK.getBaseResponseBody(companyPass));
     }
 }

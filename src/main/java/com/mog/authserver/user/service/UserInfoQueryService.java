@@ -3,6 +3,7 @@ package com.mog.authserver.user.service;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
+import com.mog.authserver.user.dto.response.UserPassDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,5 +24,10 @@ public class UserInfoQueryService {
             throw new RuntimeException("해당 사용자는 OAuth2.0 사용자가 아닙니다.");
         }
         return UserInfoResponseDTO.from(userInfoEntity);
+    }
+
+    public UserPassDTO getUserPass(Long id) {
+        UserInfoEntity byAuthId = userInfoPersistService.findByAuthId(id);
+        return UserPassDTO.from(byAuthId);
     }
 }

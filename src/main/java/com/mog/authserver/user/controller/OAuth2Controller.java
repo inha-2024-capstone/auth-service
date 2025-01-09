@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/oauth")
+@RequestMapping("/api/oauth2")
 @RestController
 public class OAuth2Controller {
     private final UserInfoAuthService userInfoAuthService;
