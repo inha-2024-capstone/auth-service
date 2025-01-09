@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompanyModifyController {
     private final CompanyModifyService companyModifyService;
 
-    @PostMapping("/description")
+    @PatchMapping("/description")
     public ResponseEntity<BaseResponseBody<Void>> modifyDescription(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @RequestBody DescriptionRequestDTO descriptionRequestDTO) {
@@ -35,7 +35,7 @@ public class CompanyModifyController {
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 
-    @PostMapping("/short-description")
+    @PatchMapping("/short-description")
     public ResponseEntity<BaseResponseBody<Void>> modifyShortDescription(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @RequestBody ShortDescriptionRequestDTO shortDescriptionRequestDTO) {
@@ -45,7 +45,7 @@ public class CompanyModifyController {
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 
-    @PostMapping("/image")
+    @PatchMapping("/image")
     public ResponseEntity<BaseResponseBody<Void>> modifyImage(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @Valid @ModelAttribute ImageModifyRequestDTO imageModifyRequestDTO) {

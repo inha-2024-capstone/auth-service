@@ -2,4 +2,4 @@ spring:
   application:
     name: authserver
   profiles:
-    default: dev
+    default: prod

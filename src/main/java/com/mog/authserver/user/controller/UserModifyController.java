@@ -10,7 +10,7 @@ import com.mog.authserver.user.service.UserInfoValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +48,7 @@ public class UserModifyController {
         return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
     }
 
-    @GetMapping("/image")
+    @DeleteMapping("/image")
     public ResponseEntity<BaseResponseBody<Void>> deleteImage(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         userInfoModifyService.deleteAndUpdateDefaultImage(authenticatedUserInfo.id());
