@@ -10,21 +10,16 @@ import com.mog.authserver.security.thirdparty.user.OAuth2Provider;
 import com.mog.authserver.security.thirdparty.user.OAuth2UserInfo;
 import com.mog.authserver.security.thirdparty.user.OAuth2UserPrincipal;
 import com.mog.authserver.security.thirdparty.util.CookieUtils;
-import com.mog.authserver.security.thirdparty.vo.UserJwtInfo;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -65,23 +60,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             OAuth2UserInfo oAuth2UserInfo = principal.getUserInfo();
             if (mode.equalsIgnoreCase("login")) {
 
-                log.info("oauth login succeeded with email={}, provider={}", oAuth2UserInfo.getEmail(),
-                        oAuth2UserInfo.getProvider());
-
                 boolean isSignedUp = oAuth2Service.hasSignedIn(oAuth2UserInfo);
-                UserJwtInfo userJwtInfo = oAuth2Service.signIn(oAuth2UserInfo);
-
-                Authentication usernamePasswordAuthenticationToken = getUsernamePasswordAuthenticationToken(
-                        userJwtInfo);
-
-                JwtToken jwtToken = jwtService.generateTokenSet(usernamePasswordAuthenticationToken);
+                JwtToken jwtToken = signIn(oAuth2UserInfo);
 
                 return UriComponentsBuilder.fromUriString(targetUrl)
                         .queryParam(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken()) // Test
                         .queryParam(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken())
                         .queryParam("sign-up", String.valueOf(isSignedUp)).build().toUriString();
             } else if (mode.equalsIgnoreCase("unlink")) {
-
                 String accessToken = principal.getUserInfo().getAccessToken();
                 OAuth2Provider provider = principal.getUserInfo().getProvider();
 
@@ -94,11 +80,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         return UriComponentsBuilder.fromUriString(targetUrl).queryParam("error", "Login failed").build().toUriString();
     }
 
-    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(UserJwtInfo userJwtInfo) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(userJwtInfo.role().name()));
-        return new UsernamePasswordAuthenticationToken(
-                new AuthenticatedUserInfo(userJwtInfo.id(), userJwtInfo.email(), authorities), "", authorities);
+    private JwtToken signIn(OAuth2UserInfo oAuth2UserInfo) {
+        log.info("oauth login succeeded with email={}, provider={}", oAuth2UserInfo.getEmail(),
+                oAuth2UserInfo.getProvider());
+
+        AuthenticatedUserInfo authenticatedUserInfo = oAuth2Service.signIn(oAuth2UserInfo);
+
+        Authentication usernamePasswordAuthenticationToken = getUsernamePasswordAuthenticationToken(
+                authenticatedUserInfo);
+
+        return jwtService.generateTokenSet(usernamePasswordAuthenticationToken);
+    }
+
+    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(
+            AuthenticatedUserInfo authenticatedUserInfo) {
+        return new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authenticatedUserInfo.authorities());
     }
 
     private String resolveMode(HttpServletRequest request) {

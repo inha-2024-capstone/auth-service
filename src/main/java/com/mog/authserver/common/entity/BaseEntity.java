@@ -17,9 +17,6 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -44,6 +44,12 @@ public class CacheConfig {
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jacksonSerializer));
 
+        RedisCacheConfiguration companyCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(userTtl)) // 기본 TTL 설정
+                .disableCachingNullValues()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jacksonSerializer));
+
         // JWT 캐시 설정 (값을 String으로 직렬화)
         RedisCacheConfiguration jwtCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(jwtTtl)) // JWT 캐시 TTL 설정
@@ -55,6 +61,7 @@ public class CacheConfig {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
         cacheConfigurations.put("jwtCache", jwtCacheConfig);
         cacheConfigurations.put("userInfoCache", defaultCacheConfig);
+        cacheConfigurations.put("companyCache", companyCacheConfig);
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultCacheConfig)

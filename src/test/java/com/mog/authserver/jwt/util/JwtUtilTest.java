@@ -28,7 +28,8 @@ class JwtUtilTest {
         //given
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));
-        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "kim", authorities);
+        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "example@example.com", "kim",
+                authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
         //when
         String jwtToken = jwtUtil.generateToken(authentication, 5);
@@ -42,7 +43,8 @@ class JwtUtilTest {
         //given
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));
-        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "kim", authorities);
+        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "example@example.com", "kim",
+                authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
         //when
         String jwtToken = jwtUtil.generateToken(authentication, 5);

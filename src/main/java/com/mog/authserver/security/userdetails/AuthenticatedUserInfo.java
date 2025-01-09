@@ -6,9 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public record AuthenticatedUserInfo(
         Long id,
-        String name,
+        String email,
+        String name, // name 또는 nickname이 될 수 있음
         Collection<? extends GrantedAuthority> authorities
 ) implements UserDetails {
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

@@ -1,43 +1,30 @@
 package com.mog.authserver.company.service;
 
+import com.mog.authserver.auth.domain.AuthEntity;
+import com.mog.authserver.auth.dto.request.AuthSignUpRequestDTO;
+import com.mog.authserver.auth.service.AuthRegisterService;
 import com.mog.authserver.company.domain.CompanyEntity;
 import com.mog.authserver.company.dto.request.CompanySignUpRequestDTO;
 import com.mog.authserver.company.dto.response.CompanyAuthInfoResponseDTO;
 import com.mog.authserver.company.mapper.CompanyMapper;
-import com.mog.authserver.jwt.JwtToken;
-import com.mog.authserver.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyAuthService {
-    private final PasswordEncoder passwordEncoder;
     private final CompanyPersistService companyPersistService;
-    private final CompanyValidateService companyValidateService;
-    private final JwtService jwtService;
+    private final AuthRegisterService authRegisterService;
 
     public void signUP(CompanySignUpRequestDTO companySignUpRequestDTO) {
-        if (companyValidateService.doesEmailExist(companySignUpRequestDTO.email())) {
-            throw new RuntimeException("이미 존재하는 회사 이메일입니다.");
-        }
-        String encodedPassword = passwordEncoder.encode(companySignUpRequestDTO.password());
-        CompanyEntity companyEntity = CompanyMapper.toCompanyEntity(companySignUpRequestDTO, encodedPassword);
+        AuthSignUpRequestDTO authSignUpRequestDTO = AuthSignUpRequestDTO.from(companySignUpRequestDTO);
+        AuthEntity authEntity = authRegisterService.signUp(authSignUpRequestDTO);
+        CompanyEntity companyEntity = CompanyMapper.createCompanyEntity(companySignUpRequestDTO, authEntity);
         companyPersistService.save(companyEntity);
     }
 
-    public void signOut(String refreshToken) {
-        jwtService.storeRefreshToken(refreshToken);
-    }
-
-    public JwtToken refreshAuth(String refreshToken) {
-        jwtService.validateRefreshTokenExistence(refreshToken);
-        return jwtService.reGenerateTokenSet(refreshToken);
-    }
-
     public CompanyAuthInfoResponseDTO getCompanyAuthInfo(Long id) {
-        CompanyEntity companyEntity = companyPersistService.findById(id);
+        CompanyEntity companyEntity = companyPersistService.findByAuthId(id);
         return CompanyAuthInfoResponseDTO.from(companyEntity);
     }
 }

@@ -1,9 +1,11 @@
 package com.mog.authserver.security.thirdparty.service;
 
+import com.mog.authserver.auth.domain.AuthEntity;
+import com.mog.authserver.auth.service.AuthPersistService;
 import com.mog.authserver.security.mapper.UserInfoMapper;
 import com.mog.authserver.security.thirdparty.user.OAuth2Provider;
 import com.mog.authserver.security.thirdparty.user.OAuth2UserInfo;
-import com.mog.authserver.security.thirdparty.vo.UserJwtInfo;
+import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.service.UserInfoPersistService;
@@ -13,27 +15,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class OAuth2Service {
+    private final AuthPersistService authPersistService;
     private final UserInfoPersistService userInfoPersistService;
 
     public void delete(OAuth2UserInfo oAuth2UserInfo) {
-        LoginSource loginSource = getLoginSource(oAuth2UserInfo);
-        userInfoPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(), loginSource);
+        //loginSource = getLoginSource(oAuth2UserInfo);
+        //AuthEntity authEntity = authPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(), loginSource);
+        //authPersistService.delete(authEntity);
     }
 
     public boolean hasSignedIn(OAuth2UserInfo oAuth2UserInfo) {
-        return userInfoPersistService.existsByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
+        return authPersistService.existsByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
                 getLoginSource(oAuth2UserInfo));
     }
 
-    public UserJwtInfo signIn(OAuth2UserInfo oAuth2UserInfo) {
-        if (hasSignedIn(oAuth2UserInfo)) {
-            UserInfoEntity userInfoEntity = userInfoPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
+    public AuthenticatedUserInfo signIn(OAuth2UserInfo oAuth2UserInfo) {
+        if (hasSignedIn(oAuth2UserInfo)) { // 로그인한 경험이 있을 경우
+            AuthEntity authEntity = authPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
                     getLoginSource(oAuth2UserInfo));
-            return UserJwtInfo.from(userInfoEntity);
+            return UserInfoMapper.toAuthenticatedUserInfo(authEntity);
         }
-        UserInfoEntity userInfoEntity = UserInfoMapper.toUserInfoEntity(oAuth2UserInfo);
-        UserInfoEntity savedUserInfoEntity = userInfoPersistService.save(userInfoEntity);
-        return UserJwtInfo.from(savedUserInfoEntity);
+        // 그렇지 않을 경우
+        AuthEntity authEntity = UserInfoMapper.createAuthEntity(oAuth2UserInfo);
+        UserInfoEntity userEntity = UserInfoMapper.createUserEntity(oAuth2UserInfo, authEntity);
+        userInfoPersistService.save(userEntity);
+        return UserInfoMapper.toAuthenticatedUserInfo(authEntity);
     }
 
     private LoginSource getLoginSource(OAuth2UserInfo oAuth2UserInfo) {

@@ -17,7 +17,7 @@ public class CompanyQueryService {
     }
 
     public CompanyInfoResponseDTO getCompanyInfo(Long id) {
-        CompanyEntity companyEntity = companyPersistService.findById(id);
+        CompanyEntity companyEntity = companyPersistService.findByAuthId(id);
         return CompanyInfoResponseDTO.from(companyEntity);
     }
 }

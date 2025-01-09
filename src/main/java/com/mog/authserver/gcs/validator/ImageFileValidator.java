@@ -22,8 +22,10 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
         if (contentType == null) {
             return false;
         }
+        System.out.println("content type: " + contentType);
         return contentType.equals("image/jpeg") ||
                 contentType.equals("image/png") ||
-                contentType.equals("image/gif");
+                contentType.equals("image/gif") ||
+                contentType.equals("image/jpg");
     }
 }

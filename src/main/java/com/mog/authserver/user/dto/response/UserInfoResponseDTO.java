@@ -23,8 +23,8 @@ public record UserInfoResponseDTO(
 
         public static UserInfoResponseDTO from(UserInfoEntity userInfoEntity){
                 return new UserInfoResponseDTO(
-                        userInfoEntity.getEmail(),
-                        userInfoEntity.getUsername(),
+                        userInfoEntity.getAuthEntity().getEmail(),
+                        userInfoEntity.getAuthEntity().getUsername(),
                         userInfoEntity.getGender(),
                         userInfoEntity.getPhoneNumber(),
                         userInfoEntity.getAddress(),

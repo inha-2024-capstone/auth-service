@@ -71,7 +71,8 @@ class JwtServiceTest {
         //given
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));
-        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "kim", authorities);
+        AuthenticatedUserInfo authenticatedUserInfo = new AuthenticatedUserInfo(1L, "example@example.com", "kim",
+                authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(authenticatedUserInfo, "", authorities);
         //when
         JwtToken jwtToken = jwtService.generateTokenSet(authentication);

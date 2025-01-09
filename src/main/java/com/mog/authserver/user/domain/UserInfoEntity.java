@@ -1,13 +1,18 @@
 package com.mog.authserver.user.domain;
 
+import com.mog.authserver.auth.domain.AuthEntity;
 import com.mog.authserver.common.entity.BaseEntity;
 import com.mog.authserver.user.domain.enums.Gender;
-import com.mog.authserver.user.domain.enums.LoginSource;
-import com.mog.authserver.user.domain.enums.Role;
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
@@ -22,18 +27,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserInfoEntity extends BaseEntity {
 
-    @Column(nullable = false, updatable = false)
-    private String email;
-
-    @Column(updatable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -47,23 +43,20 @@ public class UserInfoEntity extends BaseEntity {
 
     private String imageUrl;
 
-    @Enumerated(EnumType.STRING)
-    private LoginSource loginSource;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "auth_id", nullable = false)
+    private AuthEntity authEntity;
 
-    public UserInfoEntity(Long id, LocalDateTime createTime, LocalDateTime modifiedTime, LocalDateTime deletedTime,
-                          State state, String email, String username, String password, Role role, Gender gender,
-                          String phoneNumber, String address, String nickName, String imageUrl,
-                          LoginSource loginSource) {
-        super(id, createTime, modifiedTime, deletedTime, state);
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.role = role;
+    public UserInfoEntity(LocalDateTime createTime, LocalDateTime modifiedTime,
+                          LocalDateTime deletedTime, State state, Long id, Gender gender, String phoneNumber,
+                          String address, String nickName, String imageUrl, AuthEntity authEntity) {
+        super(createTime, modifiedTime, deletedTime, state);
+        this.id = id;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.nickName = nickName;
         this.imageUrl = imageUrl;
-        this.loginSource = loginSource;
+        this.authEntity = authEntity;
     }
 }

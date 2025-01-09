@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record OauthSignUpRequestDTO(
+public record UserOauthSignUpRequestDTO(
         @NotNull(message = "성별을 입력해야 합니다.")
         Gender gender,
 
@@ -15,7 +15,6 @@ public record OauthSignUpRequestDTO(
         @NotBlank(message = "주소지를 입력해야 합니다.")
         String address,
 
-        String imageUri,
-
+        @NotBlank
         String nickName) {
 }

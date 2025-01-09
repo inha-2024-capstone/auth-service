@@ -46,9 +46,11 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/api/user/sign-in") || path.equals("/api/company/sign-in") || Arrays.stream(
-                SecurityApiUri.USER_PERMIT_ALL).anyMatch(path::startsWith) || Arrays.stream(
-                SecurityApiUri.COM_PERMIT_ALL).anyMatch(path::startsWith) || Arrays.stream(swagger)
+        return path.equals("/api/auth/sign-in")
+                || Arrays.stream(SecurityApiUri.USER_PERMIT_ALL).anyMatch(path::startsWith)
+                || Arrays.stream(SecurityApiUri.COM_PERMIT_ALL).anyMatch(path::startsWith)
+                || Arrays.stream(SecurityApiUri.AUTH_PERMIT_ALL).anyMatch(path::startsWith)
+                || Arrays.stream(swagger)
                 .anyMatch(path::startsWith);
     }
 }

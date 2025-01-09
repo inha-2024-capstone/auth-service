@@ -28,7 +28,7 @@ public class GcsImageService {
         try {
             storage.create(blobInfo, file.getBytes());
         } catch (IOException ex) {
-            throw new RuntimeException(ex.getMessage());
+            throw new RuntimeException("파일을 저장하지 못했습니다.");
         }
         return GcsURLParser.generateURL(bucketName, fileName); // 업로드된 파일 이름 반환
     }
@@ -41,7 +41,6 @@ public class GcsImageService {
         }
     }
 
-    // 고유한 파일 이름 생성 (UUID 기반)
     private String generateFileName(String originalFileName) {
         String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
         return UUID.randomUUID() + extension; // UUID 기반 고유 이름 생성

@@ -1,10 +1,17 @@
 package com.mog.authserver.company.domain;
 
+import com.mog.authserver.auth.domain.AuthEntity;
 import com.mog.authserver.common.entity.BaseEntity;
 import com.mog.authserver.company.validator.ValidPhoneNumber;
-import com.mog.authserver.user.domain.enums.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -17,14 +24,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class CompanyEntity extends BaseEntity {
-    @Column(updatable = false)
-    private String companyName;
 
-    @Column(nullable = false, updatable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ValidPhoneNumber
     @Column(nullable = false)
@@ -41,23 +44,20 @@ public class CompanyEntity extends BaseEntity {
 
     private String imageUrl;
 
-    @Column(nullable = false, updatable = false)
-    private Role role;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "auth_id")
+    private AuthEntity authEntity;
 
-    public CompanyEntity(Long id, LocalDateTime createTime, LocalDateTime modifiedTime,
-                         LocalDateTime deletedTime, State state, String companyName, String email,
-                         String password, String phoneNumber, String address, String description,
-                         String shortDescription,
-                         String imageUrl, Role role) {
-        super(id, createTime, modifiedTime, deletedTime, state);
-        this.companyName = companyName;
-        this.email = email;
-        this.password = password;
+    public CompanyEntity(LocalDateTime createTime, LocalDateTime modifiedTime,
+                         LocalDateTime deletedTime, State state, Long id, String phoneNumber, String address,
+                         String description, String shortDescription, String imageUrl, AuthEntity authEntity) {
+        super(createTime, modifiedTime, deletedTime, state);
+        this.id = id;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.description = description;
         this.shortDescription = shortDescription;
         this.imageUrl = imageUrl;
-        this.role = role;
+        this.authEntity = authEntity;
     }
 }

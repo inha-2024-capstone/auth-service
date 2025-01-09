@@ -1,17 +1,13 @@
 package com.mog.authserver.user.service;
 
-import com.mog.authserver.jwt.JwtToken;
-import com.mog.authserver.jwt.service.JwtService;
+import com.mog.authserver.auth.domain.AuthEntity;
+import com.mog.authserver.auth.dto.request.AuthSignUpRequestDTO;
+import com.mog.authserver.auth.service.AuthRegisterService;
 import com.mog.authserver.user.domain.UserInfoEntity;
-import com.mog.authserver.user.domain.enums.LoginSource;
-import com.mog.authserver.user.dto.request.OauthSignUpRequestDTO;
-import com.mog.authserver.user.dto.request.SignUpRequestDTO;
-import com.mog.authserver.user.dto.response.UserInfoResponseDTO;
-import com.mog.authserver.user.exception.UserAlreadyExistException;
+import com.mog.authserver.user.dto.request.UserOauthSignUpRequestDTO;
+import com.mog.authserver.user.dto.request.UserSignUpRequestDTO;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
-import com.mog.authserver.user.pass.UserInfoPass;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,55 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserInfoAuthService {
-    private final PasswordEncoder passwordEncoder;
     private final UserInfoPersistService userInfoPersistService;
-    private final UserInfoValidationService userInfoValidationService;
-    private final JwtService jwtService;
+    private final AuthRegisterService authRegisterService;
 
     @Transactional(readOnly = false)
-    public void signUp(SignUpRequestDTO signUpRequestDTO) {
-        if (userInfoValidationService.doesEmailExist(signUpRequestDTO.email())) {
-            throw new UserAlreadyExistException(signUpRequestDTO.email());
-        }
+    public void signUp(UserSignUpRequestDTO userSignUpRequestDTO) {
 
-        UserInfoEntity userInfoEntity = UserInfoEntityMapper.toUserInfoEntity(signUpRequestDTO);
-        UserInfoEntity passwordEncodedEntity = UserInfoEntityMapper.updatePassword(userInfoEntity,
-                passwordEncoder.encode(userInfoEntity.getPassword()));
-        userInfoPersistService.save(passwordEncodedEntity);
+        AuthSignUpRequestDTO authSignUpRequestDTO = AuthSignUpRequestDTO.from(userSignUpRequestDTO);
+        AuthEntity authEntity = authRegisterService.signUp(authSignUpRequestDTO);
+        UserInfoEntity userInfoEntity = UserInfoEntityMapper.createUserInfoEntity(userSignUpRequestDTO, authEntity);
+
+        userInfoPersistService.save(userInfoEntity);
     }
 
     @Transactional(readOnly = false)
-    public void oAuthSignUp(OauthSignUpRequestDTO oauthSignUpRequestDTO, Long id) {
-        UserInfoEntity userInfoById = userInfoPersistService.findById(id);
-        UserInfoEntity updatedUserInfoEntity = UserInfoEntityMapper.updateUserInfoEntity(userInfoById,
-                oauthSignUpRequestDTO);
+    public void oAuthSignUp(UserOauthSignUpRequestDTO userOauthSignUpRequestDTO, Long id) {
+        UserInfoEntity byAuthId = userInfoPersistService.findByAuthId(id);
+        UserInfoEntity updatedUserInfoEntity = UserInfoEntityMapper.createUserInfoEntity(userOauthSignUpRequestDTO,
+                byAuthId);
+
         userInfoPersistService.save(updatedUserInfoEntity);
-    }
-
-    public void signOut(String refreshToken) {
-        jwtService.storeRefreshToken(refreshToken);
-    }
-
-    public JwtToken refreshAuth(String refreshToken) {
-        jwtService.validateRefreshTokenExistence(refreshToken);
-        return jwtService.reGenerateTokenSet(refreshToken);
-    }
-
-    public UserInfoResponseDTO findUserInfoById(Long id) {
-        UserInfoEntity userInfoEntity = userInfoPersistService.findById(id);
-        return UserInfoResponseDTO.from(userInfoEntity);
-    }
-
-    public UserInfoPass findUserInfoPass(Long id) {
-        UserInfoEntity userInfoEntity = userInfoPersistService.findById(id);
-        return UserInfoPass.from(userInfoEntity);
-    }
-
-    public UserInfoResponseDTO findOauth2UserInfoById(Long id) {
-        UserInfoEntity userInfoEntity = userInfoPersistService.findById(id);
-        if (userInfoEntity.getLoginSource() == LoginSource.THIS) {
-            throw new RuntimeException("해당 사용자는 OAuth2.0 사용자가 아닙니다.");
-        }
-        return UserInfoResponseDTO.from(userInfoEntity);
     }
 }

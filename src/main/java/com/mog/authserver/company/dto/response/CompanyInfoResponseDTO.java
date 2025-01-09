@@ -14,9 +14,9 @@ public record CompanyInfoResponseDTO(
 
     public static CompanyInfoResponseDTO from(CompanyEntity companyEntity) {
         return new CompanyInfoResponseDTO(
-                companyEntity.getId(),
-                companyEntity.getCompanyName(),
-                companyEntity.getEmail(),
+                companyEntity.getAuthEntity().getId(),
+                companyEntity.getAuthEntity().getUsername(),
+                companyEntity.getAuthEntity().getEmail(),
                 companyEntity.getPhoneNumber(),
                 companyEntity.getAddress(),
                 companyEntity.getDescription(),
