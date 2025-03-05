@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum SuccessStatus implements BaseStatus {
 
-    OK(HttpStatus.OK, "COMMON2000", "성공입니다.");
+    OK(HttpStatus.OK, "COMMON2000", "성공입니다."),
+    CREATED(HttpStatus.CREATED, "COMMON2010", "생성되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

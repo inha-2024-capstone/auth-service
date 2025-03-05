@@ -39,9 +39,15 @@ public class SecurityConfig {
                 .addFilterAfter(new JwtGenerationFilter(jwtService), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtValidationFilter(jwtService), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(SecurityApiUri.userPermitAll).permitAll()
-                        .requestMatchers(SecurityApiUri.swagger).permitAll()
-                        .requestMatchers(SecurityApiUri.userAuthenticated).authenticated())
+                        .requestMatchers(SecurityApiUri.USER_PERMIT_ALL).permitAll()
+                        .requestMatchers(SecurityApiUri.SWAGGER).permitAll()
+                        .requestMatchers(SecurityApiUri.COM_PERMIT_ALL).permitAll()
+                        .requestMatchers(SecurityApiUri.AUTH_PERMIT_ALL).permitAll()
+                        .requestMatchers(SecurityApiUri.USER_AUTHENTICATED).authenticated()
+                        .requestMatchers(SecurityApiUri.COM_AUTHENTICATED).authenticated()
+                        .requestMatchers(SecurityApiUri.AUTH_AUTHENTICATED).authenticated()
+                )
+                .formLogin(Customizer.withDefaults())
                 .oauth2Login(configure ->
                         configure.authorizationEndpoint(config -> config.authorizationRequestRepository(
                                         httpCookieOAuth2AuthorizationRequestRepository))

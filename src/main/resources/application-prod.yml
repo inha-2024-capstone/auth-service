@@ -10,14 +10,27 @@ spring:
     password: ${DB_PASSWORD}
   jpa: # jpa settings
     hibernate:
-      ddl-auto: create
+      ddl-auto: ${DB_DDL_AUTO}
     show-sql: false
+  data:
+    redis:
+      timeout: 500ms
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      userTTL: ${USER_TTL}
+      jwtTTL: ${JWT_TTL}
 
 jwt:
   secret: ${JWT_SECRET}
   time:
-    accessTokenExpireTime: 5
-    refreshTokenExpireTime: 30
+    accessTokenExpireTime: ${JWT_ACCESS_TIME}
+    refreshTokenExpireTime: ${JWT_REFRESH_TIME}
+
+gcp:
+  project-id: ${GCP_PROJECT_ID}
+  bucket-name: ${BUCKET_NAME}
+  credentials: ${SERVICE_CREDENTIALS}
 
 logging:
   level:

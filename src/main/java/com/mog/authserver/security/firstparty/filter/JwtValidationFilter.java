@@ -3,6 +3,7 @@ package com.mog.authserver.security.firstparty.filter;
 import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.jwt.exception.TokenNotPresentException;
 import com.mog.authserver.jwt.service.JwtService;
+import com.mog.authserver.security.config.SecurityApiUri;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +46,11 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/api/user/sign-up") || path.equals("/api/user/sign-in") || path.equals("/api/user/refresh")
-                || Arrays.stream(swagger).anyMatch(path::startsWith) || path.startsWith("/health");
+        return path.equals("/api/auth/sign-in")
+                || Arrays.stream(SecurityApiUri.USER_PERMIT_ALL).anyMatch(path::startsWith)
+                || Arrays.stream(SecurityApiUri.COM_PERMIT_ALL).anyMatch(path::startsWith)
+                || Arrays.stream(SecurityApiUri.AUTH_PERMIT_ALL).anyMatch(path::startsWith)
+                || Arrays.stream(swagger)
+                .anyMatch(path::startsWith);
     }
 }
