@@ -26,15 +26,13 @@ public class CompanyAuthController {
     public ResponseEntity<BaseResponseBody<Void>> signUp(
             @Valid @RequestBody CompanySignUpRequestDTO companySignUpRequestDTO) {
         companyAuthService.signUP(companySignUpRequestDTO);
-        return ResponseEntity.status(SuccessStatus.CREATED.getHttpStatus())
-                .body(SuccessStatus.CREATED.getBaseResponseBody());
+        return SuccessStatus.CREATED.getResponseBody();
     }
 
     @GetMapping("/auth-info")
     public ResponseEntity<BaseResponseBody<CompanyAuthInfoResponseDTO>> getCompanyAuthInfo(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         CompanyAuthInfoResponseDTO companyInfo = companyAuthService.getCompanyAuthInfo(authenticatedUserInfo.id());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(companyInfo));
+        return SuccessStatus.OK.getResponseBody(companyInfo);
     }
 }

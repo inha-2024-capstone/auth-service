@@ -15,11 +15,6 @@ public class RedisTestContainer {
     static GenericContainer<?> redisContainer = new GenericContainer<>("redis:6.2-alpine")
             .withExposedPorts(REDIS_PORT);
 
-    static {
-        // 컨테이너가 시작될 때까지 기다림
-        redisContainer.start();
-    }
-
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.redis.host", redisContainer::getHost);

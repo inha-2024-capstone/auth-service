@@ -27,11 +27,11 @@ public class OAuth2Controller {
     private final UserInfoQueryService userInfoQueryService;
 
     @PatchMapping("/sign-up")
-    public ResponseEntity<BaseResponseBody<?>> signUp(
+    public ResponseEntity<BaseResponseBody<Void>> signUp(
             @Valid @RequestBody UserOauthSignUpRequestDTO userOauthSignUpRequestDTO,
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         userInfoAuthService.oAuthSignUp(userOauthSignUpRequestDTO, authenticatedUserInfo.id());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.CREATED.getResponseBody();
     }
 
     @GetMapping("/sign-up")
@@ -39,7 +39,6 @@ public class OAuth2Controller {
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         UserInfoResponseDTO oauth2UserInfoById = userInfoQueryService.findOauth2UserInfoById(
                 authenticatedUserInfo.id());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(oauth2UserInfoById));
+        return SuccessStatus.OK.getResponseBody(oauth2UserInfoById);
     }
 }

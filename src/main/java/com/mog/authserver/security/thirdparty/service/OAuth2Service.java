@@ -19,9 +19,9 @@ public class OAuth2Service {
     private final UserInfoPersistService userInfoPersistService;
 
     public void delete(OAuth2UserInfo oAuth2UserInfo) {
-        //loginSource = getLoginSource(oAuth2UserInfo);
-        //AuthEntity authEntity = authPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(), loginSource);
-        //authPersistService.delete(authEntity);
+        LoginSource loginSource = getLoginSource(oAuth2UserInfo);
+        AuthEntity authEntity = authPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(), loginSource);
+        authPersistService.delete(authEntity);
     }
 
     public boolean hasSignedIn(OAuth2UserInfo oAuth2UserInfo) {

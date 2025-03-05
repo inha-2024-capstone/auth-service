@@ -1,9 +1,10 @@
 package com.mog.authserver.common.status;
 
 import com.mog.authserver.common.response.BaseResponseBody;
+import org.springframework.http.ResponseEntity;
 
-public interface BaseStatus {
-    <T> BaseResponseBody<T> getBaseResponseBody();
+public interface  BaseStatus {
+    <T> ResponseEntity<BaseResponseBody<T>> getResponseBody(T result);
 
-    <T> BaseResponseBody<T> getBaseResponseBody(T result);
+    <T> ResponseEntity<BaseResponseBody<T>> getResponseBody();
 }

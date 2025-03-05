@@ -5,6 +5,7 @@ import com.mog.authserver.common.status.BaseStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RequiredArgsConstructor
 @Getter
@@ -18,12 +19,16 @@ public enum SuccessStatus implements BaseStatus {
     private final String message;
 
     @Override
-    public <T> BaseResponseBody<T> getBaseResponseBody(T result) {
-        return new BaseResponseBody<>(true, this.code, this.message, result);
+    public <T> ResponseEntity<BaseResponseBody<T>> getResponseBody(T result) {
+        return ResponseEntity
+                .status(this.getHttpStatus())
+                .body(new BaseResponseBody<>(true, this.code, this.message, result));
     }
 
     @Override
-    public <T> BaseResponseBody<T> getBaseResponseBody() {
-        return new BaseResponseBody<>(true, this.code, this.message, null);
+    public <T> ResponseEntity<BaseResponseBody<T>> getResponseBody() {
+        return ResponseEntity
+                .status(this.getHttpStatus())
+                .build();
     }
 }

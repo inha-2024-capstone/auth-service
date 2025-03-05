@@ -6,7 +6,6 @@ import com.mog.authserver.security.mapper.UserInfoMapper;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.enums.LoginSource;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class CustomProvider implements AuthenticationProvider {
     private final AuthPersistService authPersistService;
     private final PasswordEncoder passwordEncoder;

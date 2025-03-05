@@ -2,22 +2,14 @@ package com.mog.authserver.user.dto.response;
 
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
-import jakarta.validation.constraints.NotBlank;
 
-public record UserPassDTO(@NotBlank
+public record UserPassDTO(
                           String email,
-
-                          @NotBlank
                           String username,
-
                           Gender gender,
-
                           String phoneNumber,
-
                           String address,
-
                           String imageUri,
-
                           String nickName) {
 
     public static UserPassDTO from(UserInfoEntity userInfoEntity) {

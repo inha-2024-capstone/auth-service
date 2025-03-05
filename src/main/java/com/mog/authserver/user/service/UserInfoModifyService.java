@@ -1,6 +1,6 @@
 package com.mog.authserver.user.service;
 
-import com.mog.authserver.common.constant.Constant;
+import com.mog.authserver.gcs.constant.GcsImages;
 import com.mog.authserver.gcs.service.GcsImageService;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.mapper.UserInfoEntityMapper;
@@ -11,11 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = false)
 public class UserInfoModifyService {
     private final UserInfoPersistService userInfoPersistService;
     private final UserInfoValidationService userInfoValidationService;
     private final GcsImageService gcsImageService;
+    private final GcsImages gcsImages;
 
     public void modifyNickname(Long id, String nickname) {
         if (userInfoValidationService.doesNickNameExist(nickname)) {
@@ -37,14 +38,14 @@ public class UserInfoModifyService {
     public void deleteAndUpdateDefaultImage(Long id) {
         UserInfoEntity byAuthId = userInfoPersistService.findByAuthId(id);
         deleteImage(id);
-        UserInfoEntity userInfoEntity = UserInfoEntityMapper.updateImage(byAuthId, Constant.DEFAULT_COMPANY_IMAGE);
+        UserInfoEntity userInfoEntity = UserInfoEntityMapper.updateImage(byAuthId, gcsImages.DEFAULT_USER_IMAGE);
         userInfoPersistService.save(userInfoEntity);
     }
 
     private void deleteImage(Long id) {
         UserInfoEntity byAuthId = userInfoPersistService.findByAuthId(id);
         if (byAuthId.getImageUrl() != null && !byAuthId.getImageUrl()
-                .equals(Constant.DEFAULT_COMPANY_IMAGE)) {
+                .equals(gcsImages.DEFAULT_USER_IMAGE)) {
             gcsImageService.deleteFile(byAuthId.getImageUrl());
         }
     }

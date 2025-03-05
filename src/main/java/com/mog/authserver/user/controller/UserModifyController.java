@@ -28,8 +28,7 @@ public class UserModifyController {
     public ResponseEntity<BaseResponseBody<Boolean>> validateNickname(
             @RequestBody UserNicknameRequestDTO userNickNameRequestDTO) {
         Boolean isSamePassword = userInfoValidationService.doesNickNameExist(userNickNameRequestDTO.nickName());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(isSamePassword));
+        return SuccessStatus.OK.getResponseBody(isSamePassword);
     }
 
     @PatchMapping("/nickname")
@@ -37,7 +36,7 @@ public class UserModifyController {
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @RequestBody UserNicknameRequestDTO userNickNameRequestDTO) {
         userInfoModifyService.modifyNickname(authenticatedUserInfo.id(), userNickNameRequestDTO.nickName());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @PatchMapping("/image")
@@ -45,13 +44,13 @@ public class UserModifyController {
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @RequestBody ImageModifyRequestDTO imageModifyRequestDTO) {
         userInfoModifyService.updateProfileImage(authenticatedUserInfo.id(), imageModifyRequestDTO.image());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @DeleteMapping("/image")
     public ResponseEntity<BaseResponseBody<Void>> deleteImage(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         userInfoModifyService.deleteAndUpdateDefaultImage(authenticatedUserInfo.id());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 }

@@ -31,6 +31,8 @@ gcp:
   project-id: ${GCP_PROJECT_ID}
   bucket-name: ${BUCKET_NAME}
   credentials: ${SERVICE_CREDENTIALS}
+  user-image: ${USER_IMAGE}
+  company-image: ${COMPANY_IMAGE}
 
 logging:
   level:

@@ -1,20 +1,20 @@
 package com.mog.authserver.company.mapper;
 
 import com.mog.authserver.auth.domain.AuthEntity;
-import com.mog.authserver.common.constant.Constant;
 import com.mog.authserver.company.domain.CompanyEntity;
 import com.mog.authserver.company.dto.request.CompanySignUpRequestDTO;
 
 public class CompanyMapper {
 
-    public static CompanyEntity createCompanyEntity(CompanySignUpRequestDTO signUpRequestDTO, AuthEntity authEntity) {
+    public static CompanyEntity createCompanyEntity(CompanySignUpRequestDTO signUpRequestDTO, AuthEntity authEntity,
+                                                    String baseComImage) {
         return new CompanyEntity(
                 null,
                 signUpRequestDTO.phoneNumber(),
                 signUpRequestDTO.address(),
                 signUpRequestDTO.description(),
                 signUpRequestDTO.shortDescription(),
-                Constant.DEFAULT_COMPANY_IMAGE,
+                baseComImage,
                 authEntity
         );
     }
@@ -48,7 +48,7 @@ public class CompanyMapper {
                 shortDescription,
                 companyEntity.getImageUrl(),
                 companyEntity.getAuthEntity()
-                );
+        );
     }
 
     public static CompanyEntity updateImageUrl(CompanyEntity companyEntity, String imageUrl) {

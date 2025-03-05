@@ -5,14 +5,17 @@ import com.mog.authserver.auth.mapper.AuthEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthModifyService {
     private final AuthPersistService authPersistService;
     private final AuthValidationService authValidationService;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = false)
     public void changePassword(Long id, String pwd) {
         AuthEntity byId = authPersistService.findById(id);
         Boolean passwordSame = authValidationService.isPasswordSame(id, pwd);
