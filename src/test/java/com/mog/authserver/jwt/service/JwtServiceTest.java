@@ -3,6 +3,8 @@ package com.mog.authserver.jwt.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
+import com.google.cloud.storage.Storage;
+import com.mog.authserver.common.UsingRedisTest;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import java.util.ArrayList;
@@ -11,16 +13,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+
 @SpringBootTest
-class JwtServiceTest {
+class JwtServiceTest extends UsingRedisTest {
 
     @Autowired
     private JwtService jwtService;
+
+    @MockBean
+    private Storage storage;
 
     @Test
     void 인증객체_반환() {

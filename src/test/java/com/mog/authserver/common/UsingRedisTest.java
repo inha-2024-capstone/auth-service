@@ -29,7 +29,6 @@ public abstract class UsingRedisTest {
 
     @DynamicPropertySource
     public static void registerRedisProperties(DynamicPropertyRegistry registry) {
-        System.out.println("fuck outta here");
         registry.add("spring.data.redis.host", REDIS_CONTAINER::getHost);
         registry.add("spring.data.redis.port", () -> REDIS_CONTAINER.getMappedPort(REDIS_PORT).toString());
     }
