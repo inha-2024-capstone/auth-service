@@ -9,13 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(transactionManager = "transactionManager")
 public class AuthModifyService {
     private final AuthPersistService authPersistService;
     private final AuthValidationService authValidationService;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly = false)
     public void changePassword(Long id, String pwd) {
         AuthEntity byId = authPersistService.findById(id);
         Boolean passwordSame = authValidationService.isPasswordSame(id, pwd);
