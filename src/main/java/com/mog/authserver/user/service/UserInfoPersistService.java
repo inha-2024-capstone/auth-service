@@ -1,6 +1,7 @@
 package com.mog.authserver.user.service;
 
 import com.mog.authserver.user.domain.UserInfoEntity;
+import com.mog.authserver.user.domain.enums.LoginSource;
 import com.mog.authserver.user.exception.UserNotFoundException;
 import com.mog.authserver.user.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ public class UserInfoPersistService {
     public UserInfoEntity findByAuthId(Long id) {
         return userInfoRepository.findByAuthEntity_Id(id)
                 .orElseThrow(() -> new UserNotFoundException("해당 Auth ID에 해당하는 유저가 없습니다."));
+    }
+
+    public UserInfoEntity findByEmailAndLoginSource(String email, LoginSource loginSource) {
+        return userInfoRepository.findByAuthEntityEmailAndAuthEntityLoginSource(email, loginSource)
+                .orElseThrow(() -> new UserNotFoundException("해당 email과 loginSource에 해당하는 유저가 없습니다."));
     }
 
     public boolean existsByNickname(String nickname) {
