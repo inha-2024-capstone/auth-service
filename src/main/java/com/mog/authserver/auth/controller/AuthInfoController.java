@@ -10,8 +10,8 @@ import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,25 +29,23 @@ public class AuthInfoController {
             @RequestBody AuthPwdRequestDTO authPwdRequestDTO) {
         authModifyService.changePassword(authenticatedUserInfo.id(), authPwdRequestDTO.pwd());
 
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
-    @PostMapping("/pwd")
+    @GetMapping("/pwd")
     public ResponseEntity<BaseResponseBody<Boolean>> validatePwd(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @RequestBody AuthPwdRequestDTO authPwdRequestDTO) {
 
         Boolean isPwdSame = authValidationService.isPasswordSame(authenticatedUserInfo.id(),
                 authPwdRequestDTO.pwd());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(isPwdSame));
+        return SuccessStatus.OK.getResponseBody(isPwdSame);
     }
 
-    @PostMapping("/email")
+    @PatchMapping("/email")
     public ResponseEntity<BaseResponseBody<Boolean>> validateEmail(@RequestBody AuthEmailRequestDTO authEmailRequestDTO) {
         Boolean doesEmailExist = authValidationService.doesEmailExist(authEmailRequestDTO.email());
 
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(doesEmailExist));
+        return SuccessStatus.OK.getResponseBody(doesEmailExist);
     }
 }

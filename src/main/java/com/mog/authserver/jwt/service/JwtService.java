@@ -17,7 +17,7 @@ public class JwtService {
     private final JwtUtil jwtUtil;
     private final TokenExpireTime tokenExpireTime;
     private final CacheManager cacheManager;
-    private final String jwtCacheName = "jwtCache";
+    private static final String jwtCacheName = "jwtCache";
 
     public JwtToken reGenerateTokenSet(String refreshToken) {
         if (!jwtUtil.isTokenValid(refreshToken)) {

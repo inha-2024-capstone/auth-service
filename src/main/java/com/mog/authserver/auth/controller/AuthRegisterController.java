@@ -23,29 +23,29 @@ public class AuthRegisterController {
 
     @GetMapping("/sign-in")
     public ResponseEntity<BaseResponseBody<Void>> signIn() {
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @GetMapping("/sign-out")
     public ResponseEntity<BaseResponseBody<Void>> signOut(
             @RequestHeader(name = Constant.HEADER_REFRESH_TOKEN) String refreshToken) {
         authRegisterService.signOut(refreshToken);
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<BaseResponseBody<?>> refresh(
+    public ResponseEntity<BaseResponseBody<Void>> refresh(
             @RequestHeader(name = Constant.HEADER_REFRESH_TOKEN) String refreshToken, HttpServletResponse response) {
         JwtToken jwtToken = authRegisterService.refreshAuth(refreshToken);
         response.setHeader(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());
         response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @GetMapping("/pass-id")
     public ResponseEntity<BaseResponseBody<Void>> passIdToService(HttpServletResponse response,
                                                                   @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         response.setHeader(Constant.HEADER_USER_ID, String.valueOf(authenticatedUserInfo.id()));
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 }

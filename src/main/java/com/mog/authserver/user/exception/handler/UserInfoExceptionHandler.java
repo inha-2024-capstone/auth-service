@@ -14,16 +14,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class UserInfoExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<BaseResponseBody<?>> userNotFoundExHandler(UserNotFoundException userNotFoundException){
-        log.info(userNotFoundException.getMessage());
-        return ResponseEntity.status(FailureStatus.USER_NOT_FOUND.getHttpStatus())
-                .body(FailureStatus.USER_NOT_FOUND.getBaseResponseBody());
+    public ResponseEntity<BaseResponseBody<String>> userNotFoundExHandler(UserNotFoundException userNotFoundException) {
+        return FailureStatus.USER_NOT_FOUND.getResponseBody(userNotFoundException.getMessage());
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<BaseResponseBody<?>> userAlreadyExistExHandler(UserAlreadyExistException userAlreadyExistException){
-        log.info(userAlreadyExistException.getMessage());
-        return ResponseEntity.status(FailureStatus.USER_ALREADY_EXISTED.getHttpStatus())
-                .body(FailureStatus.USER_ALREADY_EXISTED.getBaseResponseBody());
+    public ResponseEntity<BaseResponseBody<String>> userAlreadyExistExHandler(
+            UserAlreadyExistException userAlreadyExistException) {
+        return FailureStatus.USER_ALREADY_EXISTED.getResponseBody(userAlreadyExistException.getMessage());
     }
 }
