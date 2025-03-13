@@ -5,18 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@SpringBootTest
 class JwtUtilTest {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil = new JwtUtil("2e158dca3324bbf4491a7ca7435f16c5df6bac981cc9865683ae47a2f18254e8");
 
     @Test
     void JWT_생성_및_확인() {
