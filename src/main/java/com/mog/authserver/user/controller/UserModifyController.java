@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +43,7 @@ public class UserModifyController {
     @PatchMapping("/image")
     public ResponseEntity<BaseResponseBody<Void>> modifyImage(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
-            @RequestBody ImageModifyRequestDTO imageModifyRequestDTO) {
+            @ModelAttribute ImageModifyRequestDTO imageModifyRequestDTO) {
         userInfoModifyService.updateProfileImage(authenticatedUserInfo.id(), imageModifyRequestDTO.image());
         return SuccessStatus.OK.getResponseBody();
     }
