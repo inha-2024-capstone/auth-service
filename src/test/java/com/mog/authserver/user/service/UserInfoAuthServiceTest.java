@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.cloud.storage.Storage;
 import com.mog.authserver.auth.event.UserUpsertEvent;
 import com.mog.authserver.common.IntegrationTest;
-import com.mog.authserver.common.config.KafkaConstant;
+import com.mog.authserver.common.constant.KafkaConstant;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.Gender;
 import com.mog.authserver.user.domain.enums.LoginSource;

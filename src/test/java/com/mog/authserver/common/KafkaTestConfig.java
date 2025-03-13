@@ -3,7 +3,7 @@ package com.mog.authserver.common;
 
 import com.mog.authserver.auth.event.UserUpsertEvent;
 import com.mog.authserver.common.KafkaTestConfig.KafkaConsumerConfigValue;
-import com.mog.authserver.common.config.KafkaConstant;
+import com.mog.authserver.common.constant.KafkaConstant;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashMap;

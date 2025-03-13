@@ -1,4 +1,4 @@
-package com.mog.authserver.common.config;
+package com.mog.authserver.common.constant;
 
 public class KafkaConstant {
 

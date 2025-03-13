@@ -1,7 +1,7 @@
 package com.mog.authserver.auth.producer;
 
 import com.mog.authserver.auth.event.UserUpsertEvent;
-import com.mog.authserver.common.config.KafkaConstant;
+import com.mog.authserver.common.constant.KafkaConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
