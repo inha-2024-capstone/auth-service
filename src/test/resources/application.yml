@@ -6,18 +6,30 @@ spring:
     import: "application-dummy-oauth.yml"
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
   data:
     redis:
-      host: localhost
-      port: 6379
       password: 1234
       userTTL: 10
       jwtTTL: 30
+  kafka:
+    admin:
+      bootstrap-servers: "localhost:9092"
+    producer:
+      bootstrap-servers: "localhost:9092"
+      enable-idempotence: true
+      transaction-id-prefix: tx-
+    consumer:
+      bootstrap-servers: "localhost:9092"
+      group-id: "user-upsert"
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      isolation-level: read_committed
+
 jwt:
   secret: 2e158dca3324bbf4491a7ca7435f16c5df6bac981cc9865683ae47a2f18254e8
   time:
@@ -25,14 +37,14 @@ jwt:
     refreshTokenExpireTime: 30
 
 gcp:
-  project-id: dummy
-  bucket-name: dummy
-  credentials: dummy
-
+  project-id: "dummy"
+  bucket-name: "dummy"
+  credentials: "dummy"
+  user-image: "asda"
+  company-image: "asdas"
 logging:
   level:
-    web: debug
-    cache: debug
-    data:
-      redis: debug
-
+    org.springframework.transaction: DEBUG
+    org.springframework.kafka: DEBUG
+    org.springframework.kafka.core: DEBUG
+    org.springframework.kafka.event: DEBUG

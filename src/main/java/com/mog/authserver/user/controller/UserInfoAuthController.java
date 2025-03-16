@@ -32,7 +32,7 @@ public class UserInfoAuthController {
     public ResponseEntity<BaseResponseBody<Void>> signUp(
             @Valid @RequestBody UserSignUpRequestDTO userInfoUserSignUpRequestDTO) {
         userInfoAuthService.signUp(userInfoUserSignUpRequestDTO);
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @GetMapping("/auth-info")
@@ -40,15 +40,13 @@ public class UserInfoAuthController {
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
 
         UserInfoResponseDTO userInfoResponseDTO = userInfoQueryService.findUserInfoById(authenticatedUserInfo.id());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(userInfoResponseDTO));
+        return SuccessStatus.OK.getResponseBody(userInfoResponseDTO);
     }
 
     @GetMapping("/pass/{id}")
     public ResponseEntity<BaseResponseBody<UserPassDTO>> getUserPass(
             @PathVariable(name = "id") Long id) {
         UserPassDTO userPass = userInfoQueryService.getUserPass(id);
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(userPass));
+        return SuccessStatus.OK.getResponseBody(userPass);
     }
 }

@@ -17,6 +17,7 @@ public class JwtService {
     private final JwtUtil jwtUtil;
     private final TokenExpireTime tokenExpireTime;
     private final CacheManager cacheManager;
+    private static final String jwtCacheName = "jwtCache";
 
     public JwtToken reGenerateTokenSet(String refreshToken) {
         if (!jwtUtil.isTokenValid(refreshToken)) {
@@ -44,14 +45,14 @@ public class JwtService {
     }
 
     public void storeRefreshToken(String refreshToken) {
-        Cache jwtCache = cacheManager.getCache("jwtCache");
+        Cache jwtCache = cacheManager.getCache(jwtCacheName);
         if (jwtCache != null) {
             jwtCache.put(refreshToken, ""); // 더미 값 저장
         }
     }
 
     public void validateRefreshTokenExistence(String refreshToken) {
-        Cache jwtCache = cacheManager.getCache("jwtCache");
+        Cache jwtCache = cacheManager.getCache(jwtCacheName);
         if (jwtCache != null && jwtCache.get(refreshToken) != null) {
             throw new RuntimeException("로그아웃된 refresh token 입니다.");
         }

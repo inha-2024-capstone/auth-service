@@ -1,6 +1,6 @@
 package com.mog.authserver.security.thirdparty.handler;
 
-import com.mog.authserver.common.constant.Constant;
+import com.mog.authserver.common.constant.HttpConstant;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.security.thirdparty.requestrepository.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -64,8 +64,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 JwtToken jwtToken = signIn(oAuth2UserInfo);
 
                 return UriComponentsBuilder.fromUriString(targetUrl)
-                        .queryParam(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken()) // Test
-                        .queryParam(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken())
+                        .queryParam(HttpConstant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken()) // Test
+                        .queryParam(HttpConstant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken())
                         .queryParam("sign-up", String.valueOf(isSignedUp)).build().toUriString();
             } else if (mode.equalsIgnoreCase("unlink")) {
                 String accessToken = principal.getUserInfo().getAccessToken();

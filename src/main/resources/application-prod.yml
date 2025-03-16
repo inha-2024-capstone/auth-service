@@ -13,30 +13,35 @@ spring:
       ddl-auto: ${DB_DDL_AUTO}
     show-sql: false
   data:
-    redis:
+    redis: # Redis
       timeout: 500ms
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
       userTTL: ${USER_TTL}
       jwtTTL: ${JWT_TTL}
+  kafka: # Kafka
+    bootstrap-servers:
+      - ${KAFKA_BOOTSTRAP_SERVER}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        enable-idempotence: true
+        max-in-flight-requests-per-connection: 1
+        retries: 5
+        delivery-timeout-ms: 120000
 
-jwt:
+jwt: #JWT
   secret: ${JWT_SECRET}
   time:
     accessTokenExpireTime: ${JWT_ACCESS_TIME}
     refreshTokenExpireTime: ${JWT_REFRESH_TIME}
 
-gcp:
+gcp: #GCP
   project-id: ${GCP_PROJECT_ID}
   bucket-name: ${BUCKET_NAME}
   credentials: ${SERVICE_CREDENTIALS}
-
-logging:
-  level:
-    web: info
-    org:
-      springframework:
-        security:
-          web:
-            FilterChainProxy: info
+  user-image: ${USER_IMAGE}
+  company-image: ${COMPANY_IMAGE}

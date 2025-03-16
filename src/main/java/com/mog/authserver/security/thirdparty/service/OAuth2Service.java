@@ -8,6 +8,7 @@ import com.mog.authserver.security.thirdparty.user.OAuth2UserInfo;
 import com.mog.authserver.security.userdetails.AuthenticatedUserInfo;
 import com.mog.authserver.user.domain.UserInfoEntity;
 import com.mog.authserver.user.domain.enums.LoginSource;
+import com.mog.authserver.user.exception.UserNotFoundException;
 import com.mog.authserver.user.service.UserInfoPersistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,19 @@ public class OAuth2Service {
     private final UserInfoPersistService userInfoPersistService;
 
     public void delete(OAuth2UserInfo oAuth2UserInfo) {
-        //loginSource = getLoginSource(oAuth2UserInfo);
-        //AuthEntity authEntity = authPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(), loginSource);
-        //authPersistService.delete(authEntity);
+        LoginSource loginSource = getLoginSource(oAuth2UserInfo);
+        AuthEntity authEntity = authPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(), loginSource);
+        authPersistService.delete(authEntity);
     }
 
     public boolean hasSignedIn(OAuth2UserInfo oAuth2UserInfo) {
-        return authPersistService.existsByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
-                getLoginSource(oAuth2UserInfo));
+        try {
+            UserInfoEntity userInfoEntity = userInfoPersistService.findByEmailAndLoginSource(oAuth2UserInfo.getEmail(),
+                    getLoginSource(oAuth2UserInfo));
+            return userInfoEntity.getPhoneNumber() != null;
+        } catch (UserNotFoundException ex) {
+            return false;
+        }
     }
 
     public AuthenticatedUserInfo signIn(OAuth2UserInfo oAuth2UserInfo) {

@@ -32,7 +32,7 @@ public class CompanyModifyController {
             @RequestBody DescriptionRequestDTO descriptionRequestDTO) {
         companyModifyService.updateDescription(authenticatedUserInfo.id(), descriptionRequestDTO.description());
 
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @PatchMapping("/short-description")
@@ -42,7 +42,7 @@ public class CompanyModifyController {
         companyModifyService.updateShortDescription(authenticatedUserInfo.id(),
                 shortDescriptionRequestDTO.shortDescription());
 
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @PatchMapping("/image")
@@ -50,13 +50,13 @@ public class CompanyModifyController {
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo,
             @Valid @ModelAttribute ImageModifyRequestDTO imageModifyRequestDTO) {
         companyModifyService.updateProfileImage(authenticatedUserInfo.id(), imageModifyRequestDTO);
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @DeleteMapping("/image")
     public ResponseEntity<BaseResponseBody<Void>> deleteImage(
             @AuthenticationPrincipal AuthenticatedUserInfo authenticatedUserInfo) {
         companyModifyService.deleteAndUpdateDefaultImage(authenticatedUserInfo.id());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 }

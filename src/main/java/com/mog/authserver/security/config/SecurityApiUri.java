@@ -15,7 +15,7 @@ public class SecurityApiUri {
 
     public static final String[] USER_AUTHENTICATED = {
             "/api/auth/sign-in", "/api/user/test", "/api/user/auth-info",
-            "/api/user/pass-info/{id}", "/api/oauth/sign-up", "/api/user/nickname"};
+            "/api/user/pass-info/{id}", "/api/oauth/sign-up", "/api/user/nickname", "/api/user/image"};
 
     public static final String[] COM_PERMIT_ALL = {
             "/api/company/sign-up", "/api/company/infos", "/api/company/info/**",

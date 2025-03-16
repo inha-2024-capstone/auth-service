@@ -6,9 +6,11 @@ import com.mog.authserver.company.dto.response.CompanyPassDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(transactionManager = "transactionManager", readOnly = true)
 public class CompanyQueryService {
     private final CompanyPersistService companyPersistService;
 

@@ -24,23 +24,21 @@ public class CompanyQueryController {
     @GetMapping("/infos")
     public ResponseEntity<BaseResponseBody<Page<CompanyInfoResponseDTO>>> getCompanyInfosPaging(
             @RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(companyQueryService.getCompanyInfoPaging(page, size)));
+        Page<CompanyInfoResponseDTO> companyInfoPaging = companyQueryService.getCompanyInfoPaging(page, size);
+        return SuccessStatus.OK.getResponseBody(companyInfoPaging);
     }
 
     @GetMapping("/info/{id}")
     public ResponseEntity<BaseResponseBody<CompanyInfoResponseDTO>> getCompanyInfo(
             @PathVariable(name = "id") Long id) {
         CompanyInfoResponseDTO companyInfo = companyQueryService.getCompanyInfo(id);
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(companyInfo));
+        return SuccessStatus.OK.getResponseBody(companyInfo);
     }
 
     @GetMapping("/pass/{id}")
     public ResponseEntity<BaseResponseBody<CompanyPassDTO>> getCompanyPass(
             @PathVariable(name = "id") Long id) {
         CompanyPassDTO companyPass = companyQueryService.getCompanyPass(id);
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(companyPass));
+        return SuccessStatus.OK.getResponseBody(companyPass);
     }
 }

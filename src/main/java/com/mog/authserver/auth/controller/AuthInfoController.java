@@ -29,7 +29,7 @@ public class AuthInfoController {
             @RequestBody AuthPwdRequestDTO authPwdRequestDTO) {
         authModifyService.changePassword(authenticatedUserInfo.id(), authPwdRequestDTO.pwd());
 
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus()).body(SuccessStatus.OK.getBaseResponseBody());
+        return SuccessStatus.OK.getResponseBody();
     }
 
     @PostMapping("/pwd")
@@ -39,15 +39,13 @@ public class AuthInfoController {
 
         Boolean isPwdSame = authValidationService.isPasswordSame(authenticatedUserInfo.id(),
                 authPwdRequestDTO.pwd());
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(isPwdSame));
+        return SuccessStatus.OK.getResponseBody(isPwdSame);
     }
 
     @PostMapping("/email")
     public ResponseEntity<BaseResponseBody<Boolean>> validateEmail(@RequestBody AuthEmailRequestDTO authEmailRequestDTO) {
         Boolean doesEmailExist = authValidationService.doesEmailExist(authEmailRequestDTO.email());
 
-        return ResponseEntity.status(SuccessStatus.OK.getHttpStatus())
-                .body(SuccessStatus.OK.getBaseResponseBody(doesEmailExist));
+        return SuccessStatus.OK.getResponseBody(doesEmailExist);
     }
 }

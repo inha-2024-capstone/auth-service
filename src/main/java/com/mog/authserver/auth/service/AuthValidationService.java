@@ -5,9 +5,11 @@ import com.mog.authserver.user.domain.enums.LoginSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(transactionManager = "transactionManager", readOnly = true)
 public class AuthValidationService {
     private final AuthPersistService authPersistService;
     private final PasswordEncoder passwordEncoder;

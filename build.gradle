@@ -52,12 +52,16 @@ dependencies {
 	//GCS
 	implementation 'com.google.cloud:google-cloud-storage:2.27.0'
 
+	//MQ
+	implementation 'org.springframework.kafka:spring-kafka'
+
 	//Test Container
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:mysql'
-	//testImplementation 'org.testcontainers:redis'
+	testImplementation 'org.testcontainers:kafka'
 
+	//Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
