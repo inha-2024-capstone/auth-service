@@ -1,6 +1,6 @@
 package com.mog.authserver.security.firstparty.filter;
 
-import com.mog.authserver.common.constant.Constant;
+import com.mog.authserver.common.constant.HttpConstant;
 import com.mog.authserver.jwt.exception.TokenNotPresentException;
 import com.mog.authserver.jwt.service.JwtService;
 import com.mog.authserver.security.config.SecurityApiUri;
@@ -34,7 +34,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
     }
 
     private String resolveJwtToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        String bearerToken = request.getHeader(HttpConstant.HEADER_AUTHORIZATION);
         if (bearerToken != null) {
             if (bearerToken.startsWith("Bearer")) {
                 return bearerToken.substring(7);

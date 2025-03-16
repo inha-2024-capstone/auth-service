@@ -1,6 +1,6 @@
 package com.mog.authserver.security.firstparty.filter;
 
-import com.mog.authserver.common.constant.Constant;
+import com.mog.authserver.common.constant.HttpConstant;
 import com.mog.authserver.jwt.JwtToken;
 import com.mog.authserver.jwt.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -25,8 +25,8 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
 
         if (authentication != null) {
             JwtToken jwtToken = jwtService.generateTokenSet(authentication);
-            response.setHeader(Constant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());
-            response.setHeader(Constant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
+            response.setHeader(HttpConstant.HEADER_ACCESS_TOKEN, jwtToken.getAccessToken());
+            response.setHeader(HttpConstant.HEADER_REFRESH_TOKEN, jwtToken.getRefreshToken());
         }
         filterChain.doFilter(request, response);
     }

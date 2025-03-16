@@ -7,12 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @RequiredArgsConstructor
-@Service
+@Component
 @Slf4j
 public class UserUpsertProducer {
     private final KafkaTemplate<String, UserUpsertEvent> kafkaTemplate;

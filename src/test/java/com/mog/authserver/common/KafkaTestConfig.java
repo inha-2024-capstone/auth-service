@@ -52,7 +52,7 @@ public class KafkaTestConfig {
     }
 
     @Bean
-    public KafkaAdmin.NewTopics orderTopics() {
+    public KafkaAdmin.NewTopics userTopics() {
         return new KafkaAdmin.NewTopics(
                 TopicBuilder.name(KafkaConstant.USER_UPSERT_TOPIC).build()
         );
